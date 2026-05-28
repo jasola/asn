@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis de Situaciones de Negocio</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Index-only styles ─────────────────────────────────── */
+    .hero {
+      background: var(--navy);
+      padding: 64px 48px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 60px solid rgba(201,168,76,0.07);
+      pointer-events: none;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: 40%;
+      width: 1px; height: 200px;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.2), transparent);
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 700px; }
+    .hero-eyebrow {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: var(--font-title);
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.18;
+      margin-bottom: 18px;
+    }
+    .hero p {
+      font-family: var(--font-body);
+      font-size: 16.5px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      font-style: italic;
+    }
+    .hero-rule {
+      width: 48px; height: 2px;
+      background: var(--gold);
+      margin: 20px 0;
+    }
+
+    /* Method node decision emphasis */
+    .method-node-box.highlight-node {
+      background: rgba(201,168,76,0.12);
+      border-color: rgba(201,168,76,0.5);
+    }
+
+    /* Iteration note */
+    .iteration-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-top: 20px;
+    }
+    .iteration-note-icon { color: var(--gold); font-size: 16px; margin-top: 1px; }
+    .iteration-note-text {
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+    }
+
+    /* Step detail cards */
+    .steps-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    @media (max-width: 700px) { .steps-detail { grid-template-columns: 1fr; } }
+
+    .step-card {
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      border-top: 3px solid;
+    }
+    .step-card.esp { border-top-color: #d4a020; }
+    .step-card.rig { border-top-color: #3060b0; }
+    .step-card.ele { border-top-color: var(--green-accent); }
+
+    .step-card-num {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 6px;
+    }
+    .step-card-name {
+      font-family: var(--font-title);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .step-card-mental {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .step-card-mental.esp { background: #fef3e2; color: #8a5c00; border: 1px solid #f0d080; }
+    .step-card-mental.rig { background: #e8eef8; color: #1a3a6e; border: 1px solid #a8bce0; }
+    .step-card-mental.ele { background: #edf5ed; color: #1a5c2a; border: 1px solid #8acc8a; }
+    .step-card-desc {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink-mid);
+      line-height: 1.6;
+    }
+
+    /* Highlight principle box */
+    .principle-box {
+      background: var(--gold-pale);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--gold);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: 24px 28px;
+      margin: 32px 0;
+    }
+    .principle-box p {
+      font-family: var(--font-title);
+      font-size: 18px;
+      font-style: italic;
+      color: var(--navy);
+      line-height: 1.55;
+    }
+    .principle-box cite {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--ink-light);
+      margin-top: 10px;
+      font-style: normal;
+    }
+
+    /* Section divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border-light);
+      margin: 48px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────────────── -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="subject-label">Asignatura</span>
+    <span class="subject-title">Análisis de Situaciones de Negocio</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Inicio</div>
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">◈</span> Metodología
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Casos</div>
+
+    <a href="caso-textiles-medellin.html" class="nav-item placeholder">
+      <span class="nav-icon">○</span> Textiles Medellín
+      <span class="nav-badge">Próximo</span>
+    </a>
+
+    <a href="caso-ricks-cafe.html" class="nav-item">
+      <span class="nav-icon">●</span> Rick's Cafe Americain
+    </a>
+
+    <a href="caso-alimentacion-gorki.html" class="nav-item placeholder">
+      <span class="nav-icon">○</span> Alimentación Gorki
+      <span class="nav-badge">Próximo</span>
+    </a>
+
+    <a href="caso-programacion-avanzada.html" class="nav-item placeholder">
+      <span class="nav-icon">○</span> Servicios de Programación
+      <span class="nav-badge">Próximo</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    Análisis de Situaciones de Negocio<br>
+    Material de estudio y repaso
+  </div>
+</nav>
+
+<!-- ── MAIN ────────────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-inner">
+      <span class="hero-eyebrow">Análisis de Situaciones de Negocio</span>
+      <h1>El Método Científico<br>de Toma de Decisiones</h1>
+      <div class="hero-rule"></div>
+      <p>Una herramienta de consulta y repaso para el análisis riguroso de casos empresariales. Aplica el método paso a paso sobre situaciones reales de dirección.</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="page-content">
+
+    <!-- ── SECCIÓN 1: EL MÉTODO ─────────────────────────────── -->
+    <div class="page-header mt-32">
+      <span class="eyebrow">Fundamento metodológico</span>
+      <h1>El Método Científico</h1>
+      <div class="gold-rule"></div>
+      <p class="subtitle">Una de las manifestaciones más significativas de la creciente profesionalización de la dirección es la incorporación de técnicas rigurosas al proceso de toma de decisiones.</p>
+    </div>
+
+    <p style="font-family:var(--font-body);font-size:15.5px;color:var(--ink-mid);line-height:1.75;margin-bottom:16px;">
+      El método consiste en seguir una serie de etapas que no deben entenderse como una secuencia rígida, sino como <strong>requisitos lógicos</strong> que han de respetarse. Cada etapa exige una postura mental diferente: en algunas conviene la espontaneidad (recogida de información, formulación de alternativas); en otras, la concentración y el rigor lógico (clasificación, criterios de valoración, evaluación).
+    </p>
+    <p style="font-family:var(--font-body);font-size:15.5px;color:var(--ink-mid);line-height:1.75;margin-bottom:24px;">
+      Además, las conclusiones obtenidas al final de cada etapa pueden aconsejar <strong>retornar a una etapa anterior</strong>, incluso al punto de partida. Esta iteración es consustancial al método y no debe interpretarse como un fallo del proceso.
+    </p>
+
+    <!-- Distinction: resolución vs. decisión -->
+    <div class="callout callout-navy">
+      <strong>Distinción fundamental:</strong> El método contiene dos actividades de naturaleza distinta. La <em>resolución de problemas</em> es un proceso intelectual que, partiendo de información, termina en la formulación de alternativas. La <em>decisión</em> es el acto de elegir una alternativa. La primera es constitutivamente un razonamiento; la segunda, una elección.
+    </div>
+
+    <!-- ── DIAGRAMA DEL MÉTODO ──────────────────────────────── -->
+    <div class="method-diagram">
+      <div class="method-diagram-title">Diagrama del proceso</div>
+      <div class="method-nodes">
+
+        <div class="method-node">
+          <div class="method-node-box">
+            <div>
+              <div class="method-node-name">Predefinición (Hipótesis)</div>
+              <div class="method-node-sub">Formulación inicial del problema como hipótesis provisional</div>
+            </div>
+            <span class="method-node-tag tag-esp">Espontánea</span>
+          </div>
+        </div>
+
+        <div class="method-arrow">↓</div>
+
+        <div class="method-node">
+          <div class="method-node-box">
+            <div>
+              <div class="method-node-name">Recogida de Información</div>
+              <div class="method-node-sub">Anotar todo lo relevante sin preocuparse por el orden ni la importancia</div>
+            </div>
+            <span class="method-node-tag tag-esp">Espontánea</span>
+          </div>
+        </div>
+
+        <div class="method-arrow">↓</div>
+
+        <div class="method-node">
+          <div class="method-node-box">
+            <div>
+              <div class="method-node-name">Clasificación de la Información</div>
+              <div class="method-node-sub">Organizar los hechos para poder manejarlos; distinguir hecho de opinión</div>
+            </div>
+            <span class="method-node-tag tag-rig">Rigurosa</span>
+          </div>
+        </div>
+
+        <div class="method-arrow">↓</div>
+
+        <div class="method-node">
+          <div class="method-node-box">
+            <div>
+              <div class="method-node-name">Definición del Problema</div>
+              <div class="method-node-sub">Análisis riguroso de la relación entre síntomas; evitar diagnóstico sintomático</div>
+            </div>
+            <span class="method-node-tag tag-rig">Rigurosa</span>
+          </div>
+        </div>
+
+        <div class="method-arrow">↓</div>
+
+        <div class="method-node">
+          <div class="method-node-box">
+            <div>
+              <div class="method-node-name">Formulación de Criterios de Valoración</div>
+              <div class="method-node-sub">Hacer explícitos los criterios que guiarán la evaluación de alternativas</div>
+            </div>
+            <span class="method-node-tag tag-rig">Rigurosa</span>
+          </div>
+        </div>
+
+        <div class="method-arrow">↓</div>
+
+        <div class="method-node">
+          <div class="method-node-box">
+            <div>
+              <div class="method-node-name">Formulación de Alternativas</div>
+              <div class="method-node-sub">Anotar todas las alternativas posibles sin filtrar por factibilidad</div>
+            </div>
+            <span class="method-node-tag tag-esp">Espontánea</span>
+          </div>
+        </div>
+
+        <div class="method-arrow">↓</div>
+
+        <div class="method-node">
+          <div class="method-node-box">
+            <div>
+              <div class="method-node-name">Valoración de Alternativas</div>
+              <div class="method-node-sub">Confrontar alternativas con criterios; analizar riesgos y costes</div>
+            </div>
+            <span class="method-node-tag tag-rig">Rigurosa</span>
+          </div>
+        </div>
+
+        <div class="method-arrow">↓</div>
+
+        <div class="method-node">
+          <div class="method-node-box highlight-node">
+            <div>
+              <div class="method-node-name">Decisión</div>
+              <div class="method-node-sub">Elección entre alternativas debidamente elaboradas y valoradas</div>
+            </div>
+            <span class="method-node-tag tag-ele">Conducta electiva</span>
+          </div>
+        </div>
+
+        <div class="iteration-note">
+          <span class="iteration-note-icon">⟳</span>
+          <span class="iteration-note-text">
+            <strong style="color:rgba(255,255,255,0.7);">Proceso de iteración:</strong> Las conclusiones de cualquier etapa pueden aconsejar retornar a una etapa anterior. Las flechas de retorno no indican fracaso, sino el carácter científico del método.
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── DESCRIPCIÓN DE CADA ETAPA ────────────────────────── -->
+    <h2 class="section-title mt-0" style="margin-top:40px;">
+      <span class="step-num" style="background:var(--gold-pale);color:var(--navy);">◈</span>
+      Descripción de las etapas
+    </h2>
+
+    <div class="steps-detail">
+
+      <div class="step-card esp">
+        <div class="step-card-num">Etapa 1</div>
+        <div class="step-card-name">Predefinición</div>
+        <span class="step-card-mental esp">Espontánea</span>
+        <p class="step-card-desc">Antes de iniciar la búsqueda de información es necesario "sentir" que existe un problema. Esta percepción inicial no debe tomarse como definitiva, sino como hipótesis: una pre-definición que los hechos habrán de confirmar o desmentir. Evita el <em>diagnóstico sintomático</em>.</p>
+      </div>
+
+      <div class="step-card esp">
+        <div class="step-card-num">Etapa 2</div>
+        <div class="step-card-name">Recogida de Información</div>
+        <span class="step-card-mental esp">Espontánea</span>
+        <p class="step-card-desc">Anotar todo lo que parezca inicialmente relevante, sin preocuparse ni por el orden ni por el grado de importancia. Clave: distinguir siempre <strong>hechos</strong> (constados por observación o testimonio fidedigno) de <strong>opiniones</strong> (apreciaciones o juicios personales).</p>
+      </div>
+
+      <div class="step-card rig">
+        <div class="step-card-num">Etapa 2b</div>
+        <div class="step-card-name">Clasificación de la Información</div>
+        <span class="step-card-mental rig">Rigurosa</span>
+        <p class="step-card-desc">Sub-etapa de la anterior. La información recogida debe clasificarse de modo que pueda ser manejada: por áreas funcionales, por relevancia, por tipo. Exige rigor lógico. Prepara el terreno para la definición del problema.</p>
+      </div>
+
+      <div class="step-card rig">
+        <div class="step-card-num">Etapa 3</div>
+        <div class="step-card-name">Definición del Problema</div>
+        <span class="step-card-mental rig">Rigurosa</span>
+        <p class="step-card-desc">Etapa crucial. Analizar rigurosamente la relación entre los síntomas para llegar a una síntesis. <em>"Un problema bien definido es un problema parcialmente resuelto."</em> Evitar suposiciones gratuitas. La definición es inseparable de los criterios de valoración.</p>
+      </div>
+
+      <div class="step-card rig">
+        <div class="step-card-num">Etapa 4</div>
+        <div class="step-card-name">Criterios de Valoración</div>
+        <span class="step-card-mental rig">Rigurosa</span>
+        <p class="step-card-desc">Hacer explícitos los criterios que guiarán la evaluación de alternativas. Son consecuencia lógica de los objetivos del decisor. Solo si se hacen explícitos puede tenerse seguridad de que la alternativa elegida apunta a los propios objetivos.</p>
+      </div>
+
+      <div class="step-card esp">
+        <div class="step-card-num">Etapa 5</div>
+        <div class="step-card-name">Formulación de Alternativas</div>
+        <span class="step-card-mental esp">Espontánea</span>
+        <p class="step-card-desc">Anotar todas las alternativas posibles sin filtrar por factibilidad. La espontaneidad evita el "carril mental" que cierra el pensamiento a otras soluciones. En grupo, esta etapa requiere especialmente un clima abierto y sin crítica prematura.</p>
+      </div>
+
+      <div class="step-card rig" style="grid-column: span 1;">
+        <div class="step-card-num">Etapa 6</div>
+        <div class="step-card-name">Valoración de Alternativas</div>
+        <span class="step-card-mental rig">Rigurosa</span>
+        <p class="step-card-desc">Confrontar cada alternativa con los criterios formulados. Analizar factibilidad, riesgos y costes. Cuando hay mucha diversidad puede ser útil construir una <em>matriz</em> alternativas × criterios.</p>
+      </div>
+
+      <div class="step-card ele" style="grid-column: span 1;">
+        <div class="step-card-num">Final</div>
+        <div class="step-card-name">Decisión</div>
+        <span class="step-card-mental ele">Conducta electiva</span>
+        <p class="step-card-desc">Acto de elegir entre las alternativas debidamente elaboradas y valoradas. No es un razonamiento, es una elección. El terreno está preparado: la decisión emerge del proceso, no lo sustituye.</p>
+      </div>
+
+    </div>
+
+    <div class="principle-box">
+      <p>«Un problema bien definido es un problema parcialmente resuelto. Muchos problemas no llegan a resolverse porque nos resistimos a definirlos tal como son.»</p>
+      <cite>— El Método Científico de Toma de Decisiones, FHN-115</cite>
+    </div>
+
+    <!-- ── SECCIÓN 2: CASOS ──────────────────────────────────── -->
+    <hr class="section-divider">
+
+    <div class="page-header">
+      <span class="eyebrow">Aplicación práctica</span>
+      <h1>Casos de Estudio</h1>
+      <div class="gold-rule"></div>
+      <p class="subtitle">Análisis completo de cada caso aplicando el método científico: desde la recogida de información hasta la valoración de alternativas y la decisión.</p>
+    </div>
+
+    <div class="cases-grid">
+
+      <a href="caso-textiles-medellin.html" class="case-card disabled">
+        <div class="case-num">Caso 01</div>
+        <div class="case-name">Textiles Medellín</div>
+        <div class="case-desc">Análisis de situación empresarial aplicando el método científico de decisión.</div>
+        <div class="case-status pending">○ &nbsp;En preparación</div>
+      </a>
+
+      <a href="caso-ricks-cafe.html" class="case-card">
+        <div class="case-num">Caso 02</div>
+        <div class="case-name">Rick's Cafe Americain</div>
+        <div class="case-desc">Albert Serra decide si abandonar un empleo público para emprender un café temático en Castelldefels. Análisis financiero, estratégico y personal.</div>
+        <div class="case-status ready">● &nbsp;Disponible</div>
+      </a>
+
+      <a href="caso-alimentacion-gorki.html" class="case-card disabled">
+        <div class="case-num">Caso 03</div>
+        <div class="case-name">Alimentación Gorki</div>
+        <div class="case-desc">Análisis de situación empresarial aplicando el método científico de decisión.</div>
+        <div class="case-status pending">○ &nbsp;En preparación</div>
+      </a>
+
+      <a href="caso-programacion-avanzada.html" class="case-card disabled">
+        <div class="case-num">Caso 04</div>
+        <div class="case-name">Servicios de Programación Avanzada</div>
+        <div class="case-desc">Análisis de situación empresarial aplicando el método científico de decisión.</div>
+        <div class="case-status pending">○ &nbsp;En preparación</div>
+      </a>
+
+    </div>
+
+  </div><!-- /page-content -->
+</main>
+
+<script src="nav.js"></script>
+</body>
+</html>

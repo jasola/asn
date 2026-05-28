@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rick's Cafe Americain — Análisis de Situaciones de Negocio</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Case-page hero ────────────────────────────────────── */
+    .case-hero {
+      background: var(--navy);
+      padding: 52px 48px 44px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 3px solid var(--gold);
+    }
+    .case-hero::after {
+      content: '"';
+      position: absolute;
+      right: 48px; top: 20px;
+      font-family: var(--font-title);
+      font-size: 200px;
+      color: rgba(201,168,76,0.06);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .case-hero-inner { position: relative; z-index: 1; max-width: 680px; }
+    .case-hero-code {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .case-hero-code::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--gold);
+    }
+    .case-hero h1 {
+      font-family: var(--font-title);
+      font-size: 38px; font-weight: 700;
+      color: var(--white);
+      line-height: 1.2; margin-bottom: 14px;
+    }
+    .case-hero-quote {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      font-style: italic;
+      line-height: 1.65;
+      border-left: 2px solid rgba(201,168,76,0.4);
+      padding-left: 16px;
+      margin-bottom: 22px;
+    }
+    .case-hero-meta {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .meta-chip {
+      font-family: var(--font-ui);
+      font-size: 11.5px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .meta-chip strong { color: var(--gold-light); }
+
+    /* Top navigation bar inside content */
+    .topbar { background: var(--white); border-bottom: 1px solid var(--border);
+      padding: 0 40px; height: 56px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 50;
+      box-shadow: var(--shadow-sm); }
+
+    /* Section separators */
+    .case-section { margin-bottom: 0; }
+    .case-section + .case-section { border-top: 1px solid var(--border-light); padding-top: 40px; margin-top: 40px; }
+
+    /* Sub-section label */
+    .sub-label {
+      font-family: var(--font-ui);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 4px;
+    }
+    .sub-heading {
+      font-family: var(--font-title);
+      font-size: 20px; font-weight: 600;
+      color: var(--navy); margin-bottom: 12px;
+    }
+
+    /* Info grid */
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin: 16px 0;
+    }
+    @media (max-width: 650px) { .info-grid { grid-template-columns: 1fr; } }
+    .info-item {
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+    .info-item-label {
+      font-family: var(--font-ui);
+      font-size: 10.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ink-light); margin-bottom: 5px;
+    }
+    .info-item-value {
+      font-family: var(--font-ui);
+      font-size: 14px; color: var(--ink);
+      line-height: 1.5;
+    }
+
+    /* Comparison table wrapper */
+    .comp-wrapper { overflow-x: auto; margin: 16px 0; }
+
+    /* Decision matrix */
+    .matrix-table { width: 100%; border-collapse: collapse; font-family: var(--font-ui); font-size: 13px; }
+    .matrix-table th {
+      background: var(--navy); color: var(--gold-light);
+      padding: 10px 14px; text-align: center;
+      font-size: 11.5px; font-weight: 600;
+    }
+    .matrix-table th:first-child { text-align: left; }
+    .matrix-table td { padding: 9px 14px; border-bottom: 1px solid var(--border-light); color: var(--ink-mid); vertical-align: top; }
+    .matrix-table td:not(:first-child) { text-align: center; }
+    .matrix-table tr:nth-child(even) td { background: #f8f6f1; }
+    .score-high { color: var(--green-accent); font-weight: 700; }
+    .score-mid  { color: #8a6000; font-weight: 600; }
+    .score-low  { color: var(--red-accent); font-weight: 700; }
+
+    /* Calculation box */
+    .calc-box {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin: 16px 0;
+      font-family: 'Source Sans 3', monospace;
+    }
+    .calc-line {
+      color: rgba(255,255,255,0.65);
+      font-size: 13.5px; line-height: 2;
+    }
+    .calc-line .op { color: var(--gold); }
+    .calc-result {
+      color: var(--white);
+      font-size: 17px; font-weight: 700;
+      border-top: 1px solid rgba(201,168,76,0.3);
+      padding-top: 10px; margin-top: 6px;
+    }
+    .calc-result .big { font-size: 22px; color: var(--gold-light); }
+
+    /* Decision box */
+    .decision-box {
+      background: var(--navy);
+      border: 2px solid var(--gold);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      margin-top: 28px;
+    }
+    .decision-box-label {
+      font-family: var(--font-ui);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .decision-box-main {
+      font-family: var(--font-title);
+      font-size: 24px; font-weight: 600;
+      color: var(--white); line-height: 1.35;
+      margin-bottom: 14px;
+    }
+    .decision-box-rationale {
+      font-family: var(--font-body);
+      font-size: 15px; color: rgba(255,255,255,0.65);
+      line-height: 1.7; font-style: italic;
+    }
+
+    /* Body text inside case */
+    .body-text {
+      font-family: var(--font-body);
+      font-size: 15.5px; color: var(--ink-mid);
+      line-height: 1.75; margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="subject-label">Asignatura</span>
+    <span class="subject-title">Análisis de Situaciones de Negocio</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Inicio</div>
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">◈</span> Metodología
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Casos</div>
+    <a href="caso-textiles-medellin.html" class="nav-item placeholder">
+      <span class="nav-icon">○</span> Textiles Medellín
+      <span class="nav-badge">Próximo</span>
+    </a>
+    <a href="caso-ricks-cafe.html" class="nav-item active">
+      <span class="nav-icon">●</span> Rick's Cafe Americain
+    </a>
+    <a href="caso-alimentacion-gorki.html" class="nav-item placeholder">
+      <span class="nav-icon">○</span> Alimentación Gorki
+      <span class="nav-badge">Próximo</span>
+    </a>
+    <a href="caso-programacion-avanzada.html" class="nav-item placeholder">
+      <span class="nav-icon">○</span> Servicios de Programación
+      <span class="nav-badge">Próximo</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    Análisis de Situaciones de Negocio<br>
+    Material de estudio y repaso
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- Hero del caso -->
+  <div class="case-hero">
+    <div class="case-hero-inner">
+      <div class="case-hero-code">Caso 02 — ASN-26</div>
+      <h1>Rick's Cafe Americain</h1>
+      <div class="case-hero-quote">
+        «Ha de ser ahora o nunca. Tengo que actuar ahora; si no, será demasiado tarde. No puedo pasar más tiempo pensando»
+      </div>
+      <div class="case-hero-meta">
+        <span class="meta-chip"><strong>Protagonista:</strong> Albert Serra</span>
+        <span class="meta-chip"><strong>Lugar:</strong> Castelldefels, Barcelona</span>
+        <span class="meta-chip"><strong>Fecha:</strong> Mayo 2001</span>
+        <span class="meta-chip"><strong>Sector:</strong> Hostelería / Emprendimiento</span>
+        <span class="meta-chip"><strong>Fuente:</strong> IESE Business School</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      <a href="index.html" style="color:var(--ink-light);text-decoration:none;">Inicio</a>
+      <span class="sep">/</span>
+      <span class="current">Rick's Cafe Americain</span>
+    </div>
+    <div class="topbar-meta">
+      <span class="topbar-tag">Emprendimiento</span>
+      <span class="topbar-tag">Análisis financiero</span>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- ════════════════════════════════════════════════════
+         TABS PRINCIPALES
+    ════════════════════════════════════════════════════ -->
+    <div class="tabs-wrapper">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-metodologia">Método aplicado</button>
+        <button class="tab-btn" data-tab="tab-analisis">Análisis financiero</button>
+        <button class="tab-btn" data-tab="tab-alternativas">Alternativas</button>
+        <button class="tab-btn" data-tab="tab-decision">Decisión</button>
+        <button class="tab-btn" data-tab="tab-datos">Datos del caso</button>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           TAB 1: MÉTODO APLICADO
+      ══════════════════════════════════════════════════ -->
+      <div class="tab-pane active" id="tab-metodologia">
+
+        <!-- PASO 1: PREDEFINICIÓN -->
+        <div class="case-section">
+          <h2 class="section-title mt-0">
+            <span class="step-num">1</span>
+            Predefinición (Hipótesis inicial)
+          </h2>
+          <p class="section-intro">
+            <span class="card-badge badge-espontanea">Postura espontánea</span>
+          </p>
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">¿Cuál es la hipótesis de partida?</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <p class="body-text">Albert Serra, funcionario de la Generalitat con 36 años, se enfrenta a la decisión más importante de su vida laboral: <strong>¿debe abandonar definitivamente su puesto de funcionario para crear un café temático?</strong></p>
+              <p class="body-text">La hipótesis inicial podría formularse así: <em>"Albert tiene las condiciones (personales, financieras y de mercado) para crear un negocio propio rentable, y esa opción es preferible a la seguridad de su empleo público."</em></p>
+              <div class="callout callout-gold">
+                <strong>Atención al diagnóstico sintomático:</strong> la urgencia que siente Albert ("ha de ser ahora o nunca") es un síntoma emocional, no la definición del problema. El problema real no es la prisa, sino la elección entre seguridad y oportunidad.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 2: RECOGIDA DE INFORMACIÓN -->
+        <div class="case-section">
+          <h2 class="section-title">
+            <span class="step-num">2</span>
+            Recogida y Clasificación de Información
+          </h2>
+          <p class="section-intro">
+            <span class="card-badge badge-espontanea">Recogida: espontánea</span>&nbsp;&nbsp;
+            <span class="card-badge badge-rigurosa">Clasificación: rigurosa</span>
+          </p>
+
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">A. Situación personal y recursos de Albert</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">Edad y situación familiar</div>
+                  <div class="info-item-value">36 años, casado, hija de 7 años</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Excedencia laboral</div>
+                  <div class="info-item-value">Solicitada en feb. 2000 (2 años). Si no regresa, pierde el puesto. Quedan ~12 meses.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Salario si regresa</div>
+                  <div class="info-item-value">1.750 €/mes (funcionario Generalitat)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Ingresos cónyuge</div>
+                  <div class="info-item-value">1.350 €/mes (maestra de escuela, estable)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Ahorros disponibles</div>
+                  <div class="info-item-value">72.000 €</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Piso propio</div>
+                  <div class="info-item-value">Valor 140.000 €. Hipoteca 120.000 € al 6%, 7 años restantes (~20 años plazo)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Gasto mínimo familiar</div>
+                  <div class="info-item-value">900 €/mes (sin hipoteca)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Experiencia previa</div>
+                  <div class="info-item-value">Negocio familiar de papel + funcionario. Sin experiencia en hostelería.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">B. El mercado: Castelldefels</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">Población habitual</div>
+                  <div class="info-item-value">43.000 habitantes</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Población temporada alta</div>
+                  <div class="info-item-value">Hasta 175.000 (julio-agosto)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Tendencia</div>
+                  <div class="info-item-value">Creciente número de residentes que trabajan en Barcelona (commuters)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Comunicaciones</div>
+                  <div class="info-item-value">A 20 km de Barcelona. Ferrocarril + autovía. Uso creciente del tren.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">C. La opción franquicia: El Café de Estambul</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">Cadena</div>
+                  <div class="info-item-value">Fundada 1998. 110 cafeterías (10 propias). Solo 5 cierres desde su fundación.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Inversión total requerida</div>
+                  <div class="info-item-value">~108.775 € (ver detalle en Datos del caso)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Canon entrada</div>
+                  <div class="info-item-value">18.000 € a fondo perdido al firmar</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Royalties mensuales</div>
+                  <div class="info-item-value">7,5% sobre ventas (5% royalties + 2,5% publicidad)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Coste consumibles</div>
+                  <div class="info-item-value">22% sobre ventas (obligatorio comprar a la central)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Alquiler local (100 m²)</div>
+                  <div class="info-item-value">1.650 €/mes + 2 meses depósito</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Punto de equilibrio</div>
+                  <div class="info-item-value">450 €/día en ventas (según Sr. Contreras)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Risc de información</div>
+                  <div class="info-item-value"><strong>El Sr. Contreras tiene incentivo comercial</strong> para presentar cifras optimistas</div>
+                </div>
+              </div>
+              <div class="callout callout-red mt-16">
+                <strong>Hecho vs. Opinión:</strong> El punto de equilibrio de 450 €/día es un dato aportado por el comercial de la franquicia, con interés en la firma. Debe contrastarse con cálculos propios y datos del sector.
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">D. La opción propia: Rick's Cafe Americain</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">Inversión total estimada</div>
+                  <div class="info-item-value">67.325 € (vs. 108.775 € de la franquicia)</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Concepto</div>
+                  <div class="info-item-value">Cafetería temática inspirada en "Casablanca". Café calidad + especialidades.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Target</div>
+                  <div class="info-item-value">Jóvenes profesionales, poder adquisitivo medio-alto</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Opción A: local centro</div>
+                  <div class="info-item-value">100 m², alquiler 1.650 €/mes, depósito 4 meses. Buena visibilidad.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Opción B: local mercado</div>
+                  <div class="info-item-value">24 m² (6x4). Sin ventanas. Alquiler 475 €/mes. Junto a estación de tren.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Horario previsto</div>
+                  <div class="info-item-value">7-14h y 16-21h (L-S). Cerrado domingos. 15 días en agosto.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">E. Datos sectoriales y fiabilidad de la información</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <div class="callout callout-navy">
+                <strong>Contraste de fuentes sobre volumen de ventas:</strong> El caso presenta tres estimaciones muy diferentes que deben evaluarse críticamente.
+              </div>
+              <table class="data-table mt-16">
+                <thead>
+                  <tr>
+                    <th>Fuente</th>
+                    <th>Estimación</th>
+                    <th>Fiabilidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Albert Serra</strong> (estimación propia)</td>
+                    <td>399 cafés/día → 702,50 €/día de venta</td>
+                    <td>⚠️ Optimista. Sin experiencia previa en el sector.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sr. Contreras</strong> (comercial franquicia)</td>
+                    <td>P.E. = 450 €/día → necesita 255 cafés</td>
+                    <td>⚠️ Conflicto de interés evidente.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Informe del sector</strong> (AECafé)</td>
+                    <td>Media España: ~95-96 cafés/día por establecimiento</td>
+                    <td>✓ Dato objetivo e independiente.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout callout-red mt-16">
+                <strong>Conclusión metodológica clave:</strong> Las estimaciones de Albert suponen vender 4 veces la media nacional. La brecha entre su optimismo y los datos del sector es el elemento de información más crítico del caso.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 3: DEFINICIÓN DEL PROBLEMA -->
+        <div class="case-section">
+          <h2 class="section-title">
+            <span class="step-num">3</span>
+            Definición del Problema
+          </h2>
+          <p class="section-intro">
+            <span class="card-badge badge-rigurosa">Postura rigurosa</span>
+          </p>
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">¿Cuál es el verdadero problema de Albert?</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <p class="body-text">El problema central no es la urgencia de decidir (eso es un síntoma), sino:</p>
+              <div class="callout callout-navy">
+                <strong>Problema bien definido:</strong> Albert debe elegir entre tres opciones de futuro profesional que implican compromisos irreversibles y niveles de riesgo muy distintos: (1) volver a la Generalitat, (2) abrir una franquicia, o (3) crear su propio café. El problema real es de naturaleza estratégico-personal: ¿en qué condiciones financieras y con qué garantías puede asumir el riesgo emprendedor?
+              </div>
+              <p class="body-text mt-16"><strong>Sub-problemas identificados:</strong></p>
+              <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;margin-bottom:12px;">
+                <li>¿Son realistas las estimaciones de ventas? (problema de información)</li>
+                <li>¿Hay suficiente capital para aguantar el periodo de arranque? (problema financiero)</li>
+                <li>¿Qué ubiciación ofrece mayor tráfico? (problema comercial)</li>
+                <li>¿Franquicia o negocio propio? (problema estratégico)</li>
+                <li>¿Puede el negocio sostener el coste de 3 empleados + familia? (problema de viabilidad)</li>
+              </ul>
+              <div class="callout callout-gold">
+                <strong>Nota:</strong> Nótese que Albert no tiene experiencia en hostelería. Esto no es un "sub-problema": es una limitación estructural que afecta a todas las decisiones operativas.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 4: CRITERIOS -->
+        <div class="case-section">
+          <h2 class="section-title">
+            <span class="step-num">4</span>
+            Criterios de Valoración
+          </h2>
+          <p class="section-intro">
+            <span class="card-badge badge-rigurosa">Postura rigurosa</span>
+          </p>
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-title">¿Qué criterios debe usar Albert para decidir?</span>
+              </div>
+              <span class="reveal-icon">▼</span>
+            </div>
+            <div class="reveal-body">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Criterio</th>
+                    <th>Descripción</th>
+                    <th>Peso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Viabilidad financiera</strong></td>
+                    <td>¿El negocio puede ser rentable? ¿Cubre los costes fijos y genera beneficio razonable?</td>
+                    <td style="text-align:center;">★★★★★</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Protección familiar</strong></td>
+                    <td>¿La familia puede sostener sus gastos mínimos en el periodo de arranque?</td>
+                    <td style="text-align:center;">★★★★★</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Riesgo del capital</strong></td>
+                    <td>¿Cuánto patrimonio se expone y en qué condiciones?</td>
+                    <td style="text-align:center;">★★★★☆</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Autonomía y control</strong></td>
+                    <td>¿El modelo permite a Albert dirigir según su criterio? ¿O hay limitaciones fuertes?</td>
+                    <td style="text-align:center;">★★★☆☆</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Potencial de crecimiento</strong></td>
+                    <td>¿El modelo es escalable? ¿Permite construir una cadena en el futuro?</td>
+                    <td style="text-align:center;">★★★☆☆</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Alineación personal</strong></td>
+                    <td>¿El modelo se alinea con el proyecto vital de Albert (crear y dirigir)?</td>
+                    <td style="text-align:center;">★★☆☆☆</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-metodologia -->
+
+
+      <!-- ══════════════════════════════════════════════════
+           TAB 2: ANÁLISIS FINANCIERO
+      ══════════════════════════════════════════════════ -->
+      <div class="tab-pane" id="tab-analisis">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num" style="background:var(--gold-pale);color:var(--navy);">€</span>
+          Análisis financiero del negocio
+        </h2>
+
+        <!-- Volumen de ventas -->
+        <div class="sub-label">Estimación de volumen de ventas diario</div>
+        <div class="sub-heading">¿Cuántos cafés vende al día?</div>
+        <p class="body-text">Partiendo de las estimaciones de Albert, con precios medios de 0,675 €/café normal y 1,40 €/café especial:</p>
+
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-value">286</div>
+            <div class="kpi-label">Cafés normales/día</div>
+            <div class="kpi-sub">Punta mañana + normal + punta tarde</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value">113</div>
+            <div class="kpi-label">Cafés especiales/día</div>
+            <div class="kpi-sub">Mayor proporción en tarde y mediodía</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value">399</div>
+            <div class="kpi-label">Total cafés/día</div>
+            <div class="kpi-sub">Según estimación de Albert</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" style="color:var(--green-accent);">702 €</div>
+            <div class="kpi-label">Venta diaria estimada</div>
+            <div class="kpi-sub">Solo en café (50% del total)</div>
+          </div>
+        </div>
+
+        <div class="calc-box">
+          <div class="calc-line">Cafés normales: <span class="op">286 × 0,675 €</span> = 193,05 €</div>
+          <div class="calc-line">Cafés especiales: <span class="op">113 × 1,40 €</span> = 158,20 €</div>
+          <div class="calc-line">Venta café: <span class="op">193,05 + 158,20</span> = 351,25 €</div>
+          <div class="calc-line">Café = 50% de ventas totales → Venta total: <span class="op">351,25 / 0,50</span></div>
+          <div class="calc-result"><span class="big">= 702,50 €/día</span> &nbsp;→ supera el P.E. de 450 €</div>
+        </div>
+
+        <div class="callout callout-red">
+          <strong>Pero:</strong> la media nacional es de ~96 cafés/día por establecimiento. Albert estima vender 399. <strong>Ese es el supuesto más cuestionable del caso.</strong>
+        </div>
+
+        <!-- Punto de equilibrio -->
+        <div class="sub-label mt-32">Punto de Equilibrio</div>
+        <div class="sub-heading">¿Cuántos cafés necesitamos para no perder dinero?</div>
+        <p class="body-text">Si tomamos el P.E. de 450 €/día como válido, y el café representa el 50% de las ventas:</p>
+
+        <div class="calc-box">
+          <div class="calc-line">Venta de café necesaria: <span class="op">450 € × 0,50</span> = 225 €</div>
+          <div class="calc-line">Proporción cafés normales (55%) y especiales (45%)</div>
+          <div class="calc-line">Cafés normales: <span class="op">225 × 0,55 / 0,675</span> = 183 cafés</div>
+          <div class="calc-line">Cafés especiales: <span class="op">225 × 0,45 / 1,40</span> = 72 cafés</div>
+          <div class="calc-result"><span class="big">255 cafés/día</span> para alcanzar el P.E.</div>
+        </div>
+
+        <div class="callout callout-gold">
+          <strong>255 cafés/día</strong> sigue siendo casi 3 veces la media del sector (96). Esto es un margen de incertidumbre muy elevado.
+        </div>
+
+        <!-- Costes operativos mensuales -->
+        <div class="sub-label mt-32">Costes fijos mensuales — Rick's Cafe propio</div>
+        <div class="sub-heading">Estructura de costes estimada</div>
+
+        <div class="comp-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Concepto</th>
+                <th class="num">€/mes</th>
+                <th>Notas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Alquiler (local centro, opción A)</td>
+                <td class="num">1.650</td>
+                <td>10 años, revisable según IPC</td>
+              </tr>
+              <tr>
+                <td>Personal (2 empleados × 780 € × 14 pagas)</td>
+                <td class="num">1.820</td>
+                <td>780 € × 14 / 12 × 2 personas</td>
+              </tr>
+              <tr>
+                <td>Seguridad Social (32% sobre salario bruto)</td>
+                <td class="num">582</td>
+                <td>32% de 1.820 €</td>
+              </tr>
+              <tr>
+                <td>Electricidad</td>
+                <td class="num">150</td>
+                <td>Estimación Albert</td>
+              </tr>
+              <tr>
+                <td>Agua</td>
+                <td class="num">60</td>
+                <td>Estimación Albert</td>
+              </tr>
+              <tr>
+                <td>Teléfono</td>
+                <td class="num">75</td>
+                <td>Estimación Albert</td>
+              </tr>
+              <tr>
+                <td>Impuestos locales</td>
+                <td class="num">120</td>
+                <td>Estimación Albert</td>
+              </tr>
+              <tr>
+                <td>Amortización inversión (~67.000 € en 10 años)</td>
+                <td class="num">558</td>
+                <td>Linear, sin residual</td>
+              </tr>
+              <tr class="total-row">
+                <td><strong>TOTAL COSTES FIJOS MENSUALES</strong></td>
+                <td class="num"><strong>5.015 €</strong></td>
+                <td>Sin salario de Albert</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-navy mt-16">
+          <strong>Nota importante:</strong> Albert no se ha incluido salario propio. Si necesita al menos 1.750 € al mes para equiparar su sueldo de funcionario, los costes fijos superarían los 6.765 €/mes. La viabilidad depende críticamente del volumen de ventas.
+        </div>
+
+        <!-- Ingresos vs Costes -->
+        <div class="sub-label mt-32">Sensibilidad: ¿qué pasa si las ventas reales se acercan a la media sectorial?</div>
+        <div class="sub-heading">Análisis de escenarios</div>
+
+        <div class="comp-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Escenario</th>
+                <th class="num">Cafés/día</th>
+                <th class="num">Venta diaria</th>
+                <th class="num">Venta mensual*</th>
+                <th>Situación</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Optimista (Albert)</strong></td>
+                <td class="num">399</td>
+                <td class="num">702 €</td>
+                <td class="num">17.550 €</td>
+                <td><span class="score-high">Viable</span></td>
+              </tr>
+              <tr>
+                <td><strong>P.E. (Contreras)</strong></td>
+                <td class="num">255</td>
+                <td class="num">450 €</td>
+                <td class="num">11.250 €</td>
+                <td><span class="score-mid">Equilibrio</span></td>
+              </tr>
+              <tr>
+                <td><strong>Media sector</strong></td>
+                <td class="num">96</td>
+                <td class="num">~170 €</td>
+                <td class="num">~4.250 €</td>
+                <td><span class="score-low">Inviable</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:11.5px;color:var(--ink-light);font-family:var(--font-ui);margin-top:6px;">* 25 días/mes (sin domingos ni festivos)</p>
+
+      </div><!-- /tab-analisis -->
+
+
+      <!-- ══════════════════════════════════════════════════
+           TAB 3: ALTERNATIVAS
+      ══════════════════════════════════════════════════ -->
+      <div class="tab-pane" id="tab-alternativas">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num">5</span>
+          Formulación y Valoración de Alternativas
+        </h2>
+        <p class="section-intro">
+          <span class="card-badge badge-espontanea">Formulación: espontánea</span>&nbsp;&nbsp;
+          <span class="card-badge badge-rigurosa">Valoración: rigurosa</span>
+        </p>
+
+        <!-- Alternativas formuladas -->
+        <div class="sub-label">Alternativas identificadas</div>
+        <div class="sub-heading">Las tres opciones de Albert</div>
+
+        <div class="reveal-block open">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Alternativa 1: Volver a la Generalitat</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col">
+                <h4>Ventajas</h4>
+                <ul>
+                  <li>Salario garantizado de 1.750 €/mes</li>
+                  <li>Estabilidad familiar y cero riesgo financiero</li>
+                  <li>Conserva 72.000 € de ahorros intactos</li>
+                  <li>Hipoteca sin peligro</li>
+                  <li>Puede retomar proyecto más adelante mejor preparado</li>
+                </ul>
+              </div>
+              <div class="cons-col">
+                <h4>Inconvenientes</h4>
+                <ul>
+                  <li>Renuncia al proyecto vital que motiva a Albert</li>
+                  <li>Trabajo que ya encontraba aburrido y repetitivo</li>
+                  <li>Puede ser una decisión irreversible psicológicamente</li>
+                  <li>La excedencia como oportunidad no se repetirá</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Alternativa 2: Franquicia El Café de Estambul</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col">
+                <h4>Ventajas</h4>
+                <ul>
+                  <li>Marca conocida con historial probado (110 locales, solo 5 cierres)</li>
+                  <li>Apoyo operativo, formación y soporte de la central</li>
+                  <li>Procedimientos ya definidos (menor curva de aprendizaje)</li>
+                  <li>Castelldefels cumple el mínimo de 35.000 hab.</li>
+                  <li>Proveedor de café incluido (aunque con restricciones)</li>
+                </ul>
+              </div>
+              <div class="cons-col">
+                <h4>Inconvenientes</h4>
+                <ul>
+                  <li>Inversión notablemente más alta: 108.775 € (supera los ahorros en 36.775 €)</li>
+                  <li>Canon + royalties = 7,5% sobre ventas perpetuo</li>
+                  <li>Sin autonomía: precios, productos y horarios fijados por la central</li>
+                  <li>Dependencia total del proveedor de café (sin alternativa)</li>
+                  <li>Contreras tiene incentivo a ser optimista</li>
+                  <li>Local en zona con 7 competidores directos</li>
+                </ul>
+              </div>
+            </div>
+            <div class="callout callout-red mt-16">
+              <strong>Problema financiero crítico:</strong> La inversión requerida (108.775 €) supera los ahorros de Albert (72.000 €) en 36.775 €. Necesitaría financiación adicional, posiblemente hipotecando el piso familiar.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Alternativa 3: Rick's Cafe Americain propio</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col">
+                <h4>Ventajas</h4>
+                <ul>
+                  <li>Inversión significativamente menor: 67.325 € (dentro de sus ahorros)</li>
+                  <li>Control total: precios, productos, diseño, proveedores</li>
+                  <li>Sin royalties perpetuos sobre ventas</li>
+                  <li>Concepto diferenciado y propio (Casablanca)</li>
+                  <li>Alineado con el proyecto personal de Albert (crear y dirigir)</li>
+                  <li>Alquiler en mercado mucho más bajo (475 €/mes en opción B)</li>
+                </ul>
+              </div>
+              <div class="cons-col">
+                <h4>Inconvenientes</h4>
+                <ul>
+                  <li>Sin red de seguridad ni apoyo externo</li>
+                  <li>Sin experiencia previa en hostelería</li>
+                  <li>Historial negativo en local del mercado (negocios previos cerraron)</li>
+                  <li>Local B: 24 m² sin ventanas — muy limitado</li>
+                  <li>Competencia establecida con clientela fiel en el entorno</li>
+                  <li>Personal de confianza no profesional (cuñado, amigo)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matriz de valoración -->
+        <div class="sub-label mt-32">Matriz de valoración</div>
+        <div class="sub-heading">Confrontación alternativas × criterios</div>
+
+        <div class="comp-wrapper">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th style="min-width:160px;">Criterio</th>
+                <th>Volver a Generalitat</th>
+                <th>Franquicia</th>
+                <th>Propio (Rick's)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Viabilidad financiera</strong></td>
+                <td><span class="score-high">Alta ✓✓</span></td>
+                <td><span class="score-mid">Media (si se alcanzan ventas)</span></td>
+                <td><span class="score-mid">Media-alta (menor break-even)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Protección familiar</strong></td>
+                <td><span class="score-high">Máxima ✓✓</span></td>
+                <td><span class="score-low">Baja (inversión supera ahorros)</span></td>
+                <td><span class="score-mid">Media (cabe en ahorros)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Riesgo del capital</strong></td>
+                <td><span class="score-high">Nulo ✓✓</span></td>
+                <td><span class="score-low">Alto (108.775 €)</span></td>
+                <td><span class="score-mid">Moderado (67.325 €)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Autonomía y control</strong></td>
+                <td><span class="score-low">Nula</span></td>
+                <td><span class="score-low">Muy baja (franquiciador decide)</span></td>
+                <td><span class="score-high">Total ✓✓</span></td>
+              </tr>
+              <tr>
+                <td><strong>Potencial de crecimiento</strong></td>
+                <td><span class="score-low">Nulo</span></td>
+                <td><span class="score-mid">Limitado (territorio exclusivo)</span></td>
+                <td><span class="score-high">Alto (modelo propio escalable)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Alineación personal</strong></td>
+                <td><span class="score-low">Muy baja</span></td>
+                <td><span class="score-mid">Media</span></td>
+                <td><span class="score-high">Alta ✓✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /tab-alternativas -->
+
+
+      <!-- ══════════════════════════════════════════════════
+           TAB 4: DECISIÓN
+      ══════════════════════════════════════════════════ -->
+      <div class="tab-pane" id="tab-decision">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num" style="background:var(--green-accent);color:white;">↵</span>
+          La Decisión
+        </h2>
+        <p class="section-intro">
+          <span class="card-badge badge-electiva">Conducta electiva</span>
+        </p>
+
+        <p class="body-text">El caso no prescribe una única "respuesta correcta". El método científico lleva a una conclusión matizada que depende de qué criterios se ponderan más. A continuación, el análisis de la sesión:</p>
+
+        <div class="reveal-block open">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Posición recomendada: Negocio propio Rick's (con condiciones)</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <div class="decision-box">
+              <div class="decision-box-label">Decisión recomendada</div>
+              <div class="decision-box-main">Abrir Rick's Cafe Americain como negocio propio,<br>en el local del mercado (Opción B), con Torres Quindós como proveedor</div>
+              <div class="decision-box-rationale">La inversión total (67.325 €) cabe dentro de los ahorros de Albert sin necesidad de crédito adicional, preserva la autonomía que busca, y el local junto a la estación garantiza un flujo constante de commuters en horas punta de mañana.</div>
+            </div>
+
+            <p class="body-text mt-24"><strong>Razonamiento:</strong></p>
+            <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;margin-bottom:16px;">
+              <li>La franquicia supera los ahorros disponibles: requeriría endeudamiento sobre el piso familiar, lo que eleva el riesgo a un nivel inadmisible con una hija pequeña y sin experiencia previa.</li>
+              <li>El local del mercado (24 m², 475 €/mes) reduce drásticamente los costes fijos, bajando el punto de equilibrio real de ventas.</li>
+              <li>La ubicación junto a la estación de tren capta el segmento de commuters, que es justamente la población creciente de Castelldefels.</li>
+              <li>Con Torres Quindós (café de calidad a 9-12 €/kg, imagen de marca, máquina en depósito) se reduce la inversión en equipamiento y se gana en posicionamiento.</li>
+              <li>El modelo propio permite a Albert aprender el negocio con menor riesgo y, si funciona, expandirse con marca propia.</li>
+            </ul>
+
+            <div class="callout callout-gold">
+              <strong>Condición indispensable:</strong> Antes de firmar cualquier contrato, Albert debería pasar al menos 2-3 semanas observando el tráfico real en el local del mercado en distintos días y horarios. Sus estimaciones de 399 cafés/día son la incógnita más peligrosa del caso.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Posición alternativa: Volver a la Generalitat (con proyecto a medio plazo)</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <p class="body-text">También es defendible la opción de volver al trabajo, especialmente si se pondera más la protección familiar o si se juzga que el gap entre las estimaciones de Albert y los datos del sector es demasiado grande para asumir el riesgo.</p>
+            <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;">
+              <li>Albert puede usar el tiempo que le queda de excedencia para validar realmente el mercado (observación, encuestas, prueba piloto).</li>
+              <li>Con los ingresos de ambos cónyuges (1.750 + 1.350 = 3.100 €/mes) puede seguir ahorrando y preparar mejor el lanzamiento.</li>
+              <li>La pérdida de la excedencia no implica perder la oportunidad para siempre: puede pedir una segunda en el futuro o negociar una salida pactada.</li>
+            </ul>
+            <div class="callout callout-navy mt-16">
+              <strong>Conclusión metodológica:</strong> Ambas posiciones son razonables. Lo que el método científico descarta con claridad es la opción de la franquicia tal como está planteada, dado que la inversión requerida excede los recursos disponibles sin un análisis de financiación sólido.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Lección metodológica del caso</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <p class="body-text">Este caso ilustra perfectamente la diferencia entre <strong>hechos y opiniones</strong> como eje central del método científico:</p>
+            <table class="data-table">
+              <thead>
+                <tr><th>Afirmación</th><th>Tipo</th><th>Riesgo</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>«Venderé 399 cafés al día»</td>
+                  <td>Opinión (Albert, sin experiencia)</td>
+                  <td><span class="score-low">Alto</span></td>
+                </tr>
+                <tr>
+                  <td>«El P.E. se alcanza fácilmente» (Contreras)</td>
+                  <td>Opinión interesada (vendedor)</td>
+                  <td><span class="score-low">Alto</span></td>
+                </tr>
+                <tr>
+                  <td>La media del sector es ~96 cafés/día</td>
+                  <td>Hecho (informe sectorial independiente)</td>
+                  <td><span class="score-high">Bajo</span></td>
+                </tr>
+                <tr>
+                  <td>Los ahorros disponibles son 72.000 €</td>
+                  <td>Hecho (dato verificable)</td>
+                  <td><span class="score-high">Bajo</span></td>
+                </tr>
+                <tr>
+                  <td>Inversión franquicia: 108.775 €</td>
+                  <td>Hecho (presupuesto documentado)</td>
+                  <td><span class="score-high">Bajo</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout callout-gold mt-16">
+              <strong>Las buenas decisiones se toman con información real y contrastada.</strong> Cuando las estimaciones propias divergen radicalmente de los datos objetivos del sector, el método exige cuestionar las estimaciones, no ignorar los datos.
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-decision -->
+
+
+      <!-- ══════════════════════════════════════════════════
+           TAB 5: DATOS DEL CASO
+      ══════════════════════════════════════════════════ -->
+      <div class="tab-pane" id="tab-datos">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num" style="background:var(--gold-pale);color:var(--navy);">≡</span>
+          Datos de referencia del caso
+        </h2>
+
+        <div class="reveal-block open">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Inversión franquicia El Café de Estambul (Anexo 1)</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead><tr><th>Concepto</th><th class="num">€</th></tr></thead>
+              <tbody>
+                <tr><td>Licencias</td><td class="num">2.400</td></tr>
+                <tr><td>Notario</td><td class="num">4.500</td></tr>
+                <tr><td>Arquitecto*</td><td class="num">5.125</td></tr>
+                <tr><td>Fontanería</td><td class="num">13.200</td></tr>
+                <tr><td>Obras y Mobiliario</td><td class="num">44.600</td></tr>
+                <tr><td>Pintura</td><td class="num">13.250</td></tr>
+                <tr><td>Máquina de café*</td><td class="num">2.700</td></tr>
+                <tr><td>Cajas registradoras*</td><td class="num">1.650</td></tr>
+                <tr><td>Electricidad*</td><td class="num">7.800</td></tr>
+                <tr><td>Tazas y platos*</td><td class="num">2.000</td></tr>
+                <tr><td>Cubiertos*</td><td class="num">1.650</td></tr>
+                <tr><td>Varios*</td><td class="num">2.700</td></tr>
+                <tr><td>Existencias iniciales</td><td class="num">3.600</td></tr>
+                <tr><td>Publicidad y promoción</td><td class="num">3.600</td></tr>
+                <tr class="total-row"><td><strong>TOTAL</strong></td><td class="num"><strong>108.775</strong></td></tr>
+              </tbody>
+            </table>
+            <p class="text-small mt-8">* Suministrado por El Café de Estambul</p>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Inversión estimada Rick's Cafe Americain (Anexo 2)</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead><tr><th>Concepto</th><th class="num">€</th></tr></thead>
+              <tbody>
+                <tr><td>Licencias</td><td class="num">1.200</td></tr>
+                <tr><td>Notario</td><td class="num">1.500</td></tr>
+                <tr><td>Arquitecto</td><td class="num">4.500</td></tr>
+                <tr><td>Fontanería</td><td class="num">4.800</td></tr>
+                <tr><td>Obras y Mobiliario</td><td class="num">16.850</td></tr>
+                <tr><td>Pintura</td><td class="num">13.850</td></tr>
+                <tr><td>Máquina de café</td><td class="num">4.500</td></tr>
+                <tr><td>Cajas registradoras</td><td class="num">1.200</td></tr>
+                <tr><td>Electricidad</td><td class="num">6.625</td></tr>
+                <tr><td>Tazas y platos</td><td class="num">2.250</td></tr>
+                <tr><td>Cubiertos</td><td class="num">1.650</td></tr>
+                <tr><td>Varios</td><td class="num">2.100</td></tr>
+                <tr><td>Existencias iniciales</td><td class="num">2.700</td></tr>
+                <tr><td>Publicidad y promoción</td><td class="num">3.600</td></tr>
+                <tr class="total-row"><td><strong>TOTAL</strong></td><td class="num"><strong>67.325</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Distribuidores de café comparados</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Distribuidor</th>
+                  <th class="num">€/kg</th>
+                  <th>Calidad</th>
+                  <th>Máquina</th>
+                  <th>Notas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cafés Ponce</strong></td>
+                  <td class="num">18-24</td>
+                  <td>Muy buena</td>
+                  <td>No (descuento 10% en 4.500 €)</td>
+                  <td>Pequeño. Servicio personalizado. Riesgo de capacidad si crece.</td>
+                </tr>
+                <tr>
+                  <td><strong>El Café de Estambul</strong></td>
+                  <td class="num">15</td>
+                  <td>Media-alta</td>
+                  <td>Sí, en depósito (valor 2.750 €)</td>
+                  <td>Prioriza sus franquiciados. Solo disponible si Albert es franquiciado.</td>
+                </tr>
+                <tr>
+                  <td><strong>Torres Quindós</strong></td>
+                  <td class="num">9-12</td>
+                  <td>Media</td>
+                  <td>Sí (condiciones a negociar)</td>
+                  <td>Gran empresa. Imagen de marca. Burocrática pero fiable para escala.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="text-small mt-8">Referencia: de 1 kg de café se obtienen ~140 tazas.</p>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-title">Mix de productos y márgenes</span>
+            </div>
+            <span class="reveal-icon">▼</span>
+          </div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead>
+                <tr><th>Producto</th><th class="num">% ventas</th><th>Precio venta</th><th>Coste approx.</th><th>Margen</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Café normal</td>
+                  <td class="num">—</td>
+                  <td>0,55 – 0,80 € (media ~0,675)</td>
+                  <td>Variable según dist.</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Café especial</td>
+                  <td class="num">—</td>
+                  <td>1,40 €</td>
+                  <td>≈ doble que normal</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Té</td>
+                  <td class="num">—</td>
+                  <td>1,00 €/taza</td>
+                  <td>0,25 €/taza</td>
+                  <td>75%</td>
+                </tr>
+                <tr>
+                  <td>Pastelería</td>
+                  <td class="num">20%</td>
+                  <td>Variable</td>
+                  <td>Variable</td>
+                  <td>Min 35%</td>
+                </tr>
+                <tr>
+                  <td>Café a granel</td>
+                  <td class="num">15%</td>
+                  <td>Variable</td>
+                  <td>Variable</td>
+                  <td>30% (media)</td>
+                </tr>
+                <tr>
+                  <td>Bebidas no alcohólicas</td>
+                  <td class="num">15%</td>
+                  <td>Variable</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+                <tr class="total-row">
+                  <td>Café (normal + especial)</td>
+                  <td class="num">50%</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /tab-datos -->
+
+    </div><!-- /tabs-wrapper -->
+
+  </div><!-- /page-content -->
+</main>
+
+<script src="nav.js"></script>
+</body>
+</html>
