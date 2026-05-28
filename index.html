@@ -5,186 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Análisis de Situaciones de Negocio</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <style>
-    .hero {
-      background: var(--navy);
-      padding: 56px 48px 48px;
-      position: relative; overflow: hidden;
-    }
-    .hero::after {
-      content: ''; position: absolute;
-      bottom: -80px; right: -80px;
-      width: 320px; height: 320px; border-radius: 50%;
-      border: 60px solid rgba(201,168,76,0.06); pointer-events: none;
-    }
-    .hero-inner { position: relative; z-index: 1; max-width: 680px; }
-    .hero-eyebrow {
-      font-family: var(--font-ui); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: var(--gold); display: block; margin-bottom: 14px;
-    }
-    .hero h1 {
-      font-family: var(--font-title); font-size: 40px; font-weight: 700;
-      color: var(--white); line-height: 1.18; margin-bottom: 16px;
-    }
-    .hero p {
-      font-family: var(--font-body); font-size: 16px;
-      color: rgba(255,255,255,0.6); line-height: 1.7; font-style: italic;
-    }
-    .hero-rule { width: 48px; height: 2px; background: var(--gold); margin: 18px 0; }
+    .hero { background:var(--navy); padding:52px 48px 44px; position:relative; overflow:hidden; }
+    .hero::after { content:''; position:absolute; bottom:-80px; right:-80px; width:300px; height:300px; border-radius:50%; border:55px solid rgba(201,168,76,0.06); pointer-events:none; }
+    .hero-inner { position:relative; z-index:1; max-width:680px; }
+    .hero-eyebrow { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:13px; }
+    .hero h1 { font-family:var(--font-title); font-size:38px; font-weight:700; color:var(--white); line-height:1.18; margin-bottom:15px; }
+    .hero p { font-family:var(--font-body); font-size:15.5px; color:rgba(255,255,255,.6); line-height:1.7; font-style:italic; }
+    .hero-rule { width:44px; height:2px; background:var(--gold); margin:17px 0; }
 
-    /* Diagram wrapper */
-    .diagram-section {
-      background: var(--white);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-      margin-bottom: 40px;
-    }
-    .diagram-header {
-      background: var(--navy);
-      padding: 18px 28px;
-      display: flex; align-items: center;
-      justify-content: space-between; flex-wrap: wrap; gap: 12px;
-    }
-    .diagram-header h2 {
-      font-family: var(--font-title); font-size: 18px; font-weight: 600;
-      color: var(--white); margin: 0;
-    }
-    .legend {
-      display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
-    }
-    .legend-item {
-      display: flex; align-items: center; gap: 6px;
-      font-family: var(--font-ui); font-size: 11px;
-      color: rgba(255,255,255,0.6);
-    }
-    .leg-box { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; }
-    .leg-etapa  { background: #1a2744; border: 1px solid #4a6090; }
-    .leg-postura { background: #c0392b; }
-    .leg-arr-orange {
-      width: 28px; height: 2px; background: #e8880a; position: relative; flex-shrink: 0;
-    }
-    .leg-arr-orange::after {
-      content: ''; position: absolute; right: -1px; top: -4px;
-      border: 4px solid transparent; border-left: 6px solid #e8880a;
-    }
-    .leg-arr-blue {
-      width: 28px; height: 0; flex-shrink: 0;
-      border-top: 2px dashed #4a7cc9; position: relative;
-    }
-    .leg-arr-blue::after {
-      content: ''; position: absolute; right: -1px; top: -5px;
-      border: 4px solid transparent; border-left: 6px solid #4a7cc9;
-    }
+    /* ── Diagram container ── */
+    .diagram-section { background:var(--white); border:1px solid var(--border-light); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-md); margin-bottom:40px; }
+    .diagram-header { background:var(--navy); padding:16px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    .diagram-header h2 { font-family:var(--font-title); font-size:17px; font-weight:600; color:var(--white); margin:0; }
+    .legend { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+    .leg { display:flex; align-items:center; gap:5px; font-family:var(--font-ui); font-size:11px; color:rgba(255,255,255,.55); }
+    .leg-sq { width:12px; height:12px; border-radius:2px; flex-shrink:0; }
+    .leg-arr-o { width:22px; height:2px; background:#d47010; position:relative; flex-shrink:0; }
+    .leg-arr-o::after { content:''; position:absolute; right:-1px; top:-3px; border:3px solid transparent; border-left:5px solid #d47010; }
+    .leg-arr-b { width:22px; height:0; flex-shrink:0; border-top:2px dashed #4a7cc9; position:relative; }
+    .leg-arr-b::after { content:''; position:absolute; right:-1px; top:-4px; border:3px solid transparent; border-left:5px solid #4a7cc9; }
 
-    .diagram-svg-wrap {
-      padding: 28px 28px 8px;
-      background: #f4f2ed;
-    }
+    .diagram-body { padding:24px; display:flex; gap:20px; align-items:flex-start; background:#f4f2ed; }
+    .diagram-svg-wrap { flex:0 0 340px; }
 
-    /* detail panel */
-    .detail-panel {
-      margin: 0 28px 20px;
-      background: var(--gold-pale);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--gold);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 16px 20px;
-      display: none;
-      font-family: var(--font-ui);
-    }
-    .detail-panel.visible { display: block; }
-    .dp-eyebrow {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--ink-light); margin-bottom: 3px;
-    }
-    .dp-title {
-      font-family: var(--font-title); font-size: 18px; font-weight: 600;
-      color: var(--navy); margin-bottom: 8px;
-    }
-    .dp-badge { margin-bottom: 10px; }
-    .dp-body {
-      font-size: 13.5px; color: var(--ink-mid); line-height: 1.65;
-    }
-    .dp-badge span {
-      display: inline-block; padding: 2px 10px; border-radius: 3px;
-      font-size: 12px; font-weight: 700; margin-right: 6px;
-    }
-    .badge-esp { background: #c0392b; color: #fff; }
-    .badge-rig { background: #c0392b; color: #fff; }
-    .badge-ele { background: #1e6b3a; color: #fff; }
+    /* ── Detail panel ── */
+    .detail-panel { flex:1; min-width:0; background:var(--white); border:1px solid var(--border-light); border-radius:var(--radius); padding:20px; min-height:320px; display:flex; flex-direction:column; justify-content:center; }
+    .dp-empty { text-align:center; color:var(--ink-light); font-family:var(--font-ui); font-size:13px; line-height:1.6; }
+    .dp-empty .hint { font-size:26px; opacity:.3; margin-bottom:9px; }
+    .dp-content { display:none; }
+    .dp-eyebrow { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-light); margin-bottom:3px; }
+    .dp-title { font-family:var(--font-title); font-size:19px; font-weight:600; color:var(--navy); margin-bottom:9px; line-height:1.3; }
+    .dp-chip { display:inline-block; font-family:var(--font-ui); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-bottom:12px; }
+    .dp-chip.esp { background:#fef3e2; color:#8a5c00; border:1px solid #f0d080; }
+    .dp-chip.rig { background:#e8eef8; color:#1a3a6e; border:1px solid #a8bce0; }
+    .dp-chip.ele { background:#edf5ed; color:#1a5c2a; border:1px solid #8acc8a; }
+    .dp-desc { font-family:var(--font-ui); font-size:13.5px; color:var(--ink-mid); line-height:1.65; margin-bottom:12px; }
+    .dp-mental { font-family:var(--font-ui); font-size:12.5px; color:var(--ink-mid); line-height:1.6; padding:10px 14px; background:var(--cream); border-radius:var(--radius); border:1px solid var(--border-light); }
 
-    .diagram-note {
-      padding: 12px 28px; background: var(--navy);
-      display: flex; align-items: center; gap: 10px;
-    }
-    .diagram-note-icon { color: var(--gold); font-size: 14px; flex-shrink: 0; }
-    .diagram-note-text {
-      font-family: var(--font-ui); font-size: 12px;
-      color: rgba(255,255,255,0.5); line-height: 1.55;
-    }
-    .diagram-note-text strong { color: rgba(255,255,255,0.75); }
+    /* ── Diagram SVG node interactions ── */
+    .dng { cursor:pointer; }
+    .dng rect { transition:filter .15s; }
+    .dng:hover rect.nb { filter:brightness(1.2); }
+    .dng.sel rect.nb { stroke:#c9a84c !important; stroke-width:2 !important; }
 
-    /* clickable nodes */
-    .dg-node { cursor: pointer; }
-    .dg-node rect.etapa-rect { transition: filter 0.15s; }
-    .dg-node:hover rect.etapa-rect { filter: brightness(1.18); }
-    .dg-node:hover rect.postura-rect { filter: brightness(1.15); }
-    .dg-node.selected rect.etapa-rect { stroke: #c9a84c !important; stroke-width: 2 !important; }
+    /* ── Principle box ── */
+    .principle-box { background:var(--gold-pale); border:1px solid var(--border); border-left:5px solid var(--gold); border-radius:0 var(--radius-lg) var(--radius-lg) 0; padding:22px 26px; margin:32px 0; }
+    .principle-box p { font-family:var(--font-title); font-size:17px; font-style:italic; color:var(--navy); line-height:1.55; }
+    .principle-box cite { display:block; font-family:var(--font-ui); font-size:11.5px; color:var(--ink-light); margin-top:8px; font-style:normal; }
 
-    /* step detail cards below */
-    .steps-detail {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0;
-    }
-    @media (max-width:700px) { .steps-detail { grid-template-columns: 1fr; } }
-    .step-card {
-      background: var(--white); border: 1px solid var(--border-light);
-      border-radius: var(--radius); padding: 20px 22px; border-top: 3px solid;
-    }
-    .step-card.esp { border-top-color: #c0392b; }
-    .step-card.rig { border-top-color: #3060b0; }
-    .step-card.ele { border-top-color: var(--green-accent); }
-    .step-num {
-      font-family: var(--font-ui); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 5px;
-    }
-    .step-name {
-      font-family: var(--font-title); font-size: 16px; font-weight: 600;
-      color: var(--navy); margin-bottom: 4px;
-    }
-    .step-mental {
-      display: inline-block; font-family: var(--font-ui); font-size: 10.5px;
-      font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-bottom: 9px;
-    }
-    .step-mental.esp { background:#fef3e2;color:#8a5c00;border:1px solid #f0d080; }
-    .step-mental.rig { background:#e8eef8;color:#1a3a6e;border:1px solid #a8bce0; }
-    .step-mental.ele { background:#edf5ed;color:#1a5c2a;border:1px solid #8acc8a; }
-    .step-desc { font-family:var(--font-ui);font-size:13px;color:var(--ink-mid);line-height:1.6; }
-
-    .principle-box {
-      background: var(--gold-pale); border: 1px solid var(--border);
-      border-left: 5px solid var(--gold);
-      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-      padding: 22px 26px; margin: 32px 0;
-    }
-    .principle-box p {
-      font-family: var(--font-title); font-size: 17px;
-      font-style: italic; color: var(--navy); line-height: 1.55;
-    }
-    .principle-box cite {
-      display: block; font-family: var(--font-ui); font-size: 11.5px;
-      color: var(--ink-light); margin-top: 8px; font-style: normal;
-    }
-
-    @media (max-width:900px) {
-      .hero { padding: 40px 24px 36px; }
-      .hero h1 { font-size: 28px; }
-      .diagram-header { padding: 14px 20px; }
-      .diagram-svg-wrap { padding: 16px 12px 8px; }
-      .detail-panel { margin: 0 16px 16px; }
+    @media(max-width:900px) {
+      .diagram-body { flex-direction:column; }
+      .diagram-svg-wrap { flex:none; width:100%; }
+      .hero { padding:36px 24px 32px; }
+      .hero h1 { font-size:28px; }
     }
   </style>
 </head>
@@ -198,315 +72,184 @@
   </div>
   <div class="nav-section">
     <div class="nav-section-label">Inicio</div>
-    <a href="index.html" class="nav-item active">
-      <span class="nav-icon">◈</span> Metodología
-    </a>
+    <a href="index.html" class="nav-item active"><span class="nav-icon">◈</span> Metodología</a>
   </div>
   <div class="nav-section">
     <div class="nav-section-label">Casos</div>
     <a href="caso-textiles-medellin.html" class="nav-item placeholder">
-      <span class="nav-icon">○</span> Textiles Medellín
-      <span class="nav-badge">Próximo</span>
+      <span class="nav-icon">○</span> Textiles Medellín<span class="nav-badge">Próximo</span>
     </a>
     <a href="caso-ricks-cafe.html" class="nav-item">
       <span class="nav-icon">●</span> Rick's Cafe Americain
     </a>
     <a href="caso-alimentacion-gorki.html" class="nav-item placeholder">
-      <span class="nav-icon">○</span> Alimentación Gorki
-      <span class="nav-badge">Próximo</span>
+      <span class="nav-icon">○</span> Alimentación Gorki<span class="nav-badge">Próximo</span>
     </a>
     <a href="caso-programacion-avanzada.html" class="nav-item placeholder">
-      <span class="nav-icon">○</span> Servicios de Programación
-      <span class="nav-badge">Próximo</span>
+      <span class="nav-icon">○</span> Servicios de Programación<span class="nav-badge">Próximo</span>
     </a>
   </div>
-  <div class="sidebar-footer">
-    Análisis de Situaciones de Negocio<br>
-    Material de estudio y repaso
-  </div>
+  <div class="sidebar-footer">Análisis de Situaciones de Negocio<br>Material de estudio y repaso</div>
 </nav>
 
 <main class="main">
-
   <div class="hero">
     <div class="hero-inner">
       <span class="hero-eyebrow">Análisis de Situaciones de Negocio</span>
       <h1>El Método Científico<br>de Toma de Decisiones</h1>
       <div class="hero-rule"></div>
-      <p>Una herramienta de consulta y repaso para el análisis riguroso de casos empresariales. Aplica el método paso a paso sobre situaciones reales de dirección.</p>
+      <p>Herramienta de consulta y repaso. Haz clic en cada etapa del diagrama para ver su descripción y la postura mental requerida.</p>
     </div>
   </div>
 
   <div class="topbar">
-    <div class="topbar-breadcrumb">
-      <span class="current">Metodología</span>
-    </div>
-    <div class="topbar-meta">
-      <button class="menu-toggle" id="menuToggle">☰</button>
-    </div>
+    <div class="topbar-breadcrumb"><span class="current">Metodología</span></div>
+    <div class="topbar-meta"><button class="menu-toggle" id="menuToggle">☰</button></div>
   </div>
 
   <div class="page-content">
 
-    <div class="page-header mt-0" style="margin-bottom:28px;">
+    <div class="page-header mt-0" style="margin-bottom:24px;">
       <span class="eyebrow">Fundamento metodológico</span>
       <h1>El Método del Caso y las Capacidades de Dirigir</h1>
       <div class="gold-rule"></div>
-      <p class="subtitle">Haz clic en cualquier etapa para ver su descripción y la postura mental requerida.</p>
     </div>
 
-    <!-- ═══════════════════════════════════════════
-         DIAGRAMA INTERACTIVO
-    ════════════════════════════════════════════ -->
+    <!-- ═══════════ DIAGRAMA INTERACTIVO ═══════════ -->
     <div class="diagram-section">
-
       <div class="diagram-header">
         <h2>El Método Científico de Toma de Decisiones</h2>
         <div class="legend">
-          <div class="legend-item">
-            <div class="leg-box leg-etapa"></div> Etapas del proceso
-          </div>
-          <div class="legend-item">
-            <div class="leg-box leg-postura"></div> Postura mental
-          </div>
-          <div class="legend-item">
-            <div class="leg-arr-orange"></div> Proceso inicial
-          </div>
-          <div class="legend-item">
-            <div class="leg-arr-blue"></div> Proceso de iteración
-          </div>
+          <div class="leg"><div class="leg-sq" style="background:#1a2744;border:0.5px solid #4a6090"></div>Etapas del proceso</div>
+          <div class="leg"><div class="leg-arr-o"></div>Proceso inicial</div>
+          <div class="leg"><div class="leg-arr-b"></div>Proceso de iteración</div>
+          <div class="leg"><div class="leg-sq" style="background:#1e3a28;border:0.5px solid #2e6040"></div>Decisión</div>
         </div>
       </div>
 
-      <div class="diagram-svg-wrap">
-        <svg width="100%" viewBox="0 0 680 590" role="img">
-          <title>El Método Científico de Toma de Decisiones</title>
-          <desc>Diagrama interactivo del método científico con etapas, posturas mentales y procesos de iteración y flujo</desc>
-          <defs>
-            <marker id="arr-o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="#e8880a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </marker>
-            <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="#4a7cc9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </marker>
-          </defs>
+      <div class="diagram-body">
 
-          <!-- ── ITERATION arrows (blue dashed) — behind everything ── -->
-          <!-- Left loop: from Valoración left edge up to Predefinición left edge -->
-          <path d="M 100 490 L 46 490 L 46 80 L 100 80"
-                fill="none" stroke="#4a7cc9" stroke-width="1.5" stroke-dasharray="6 4"
-                marker-end="url(#arr-b)"/>
-          <!-- Right loop: from Decisión right edge up to Definición right edge -->
-          <path d="M 436 490 L 500 490 L 500 80 L 436 80"
-                fill="none" stroke="#4a7cc9" stroke-width="1.5" stroke-dasharray="6 4"
-                marker-end="url(#arr-b)"/>
+        <!-- SVG diagram -->
+        <div class="diagram-svg-wrap">
+          <svg width="100%" viewBox="0 0 340 490" role="img">
+            <title>Método científico de toma de decisiones</title>
+            <desc>Diagrama interactivo con etapas en azul marino, flujo naranja y bucle de iteración azul discontinuo</desc>
+            <defs>
+              <marker id="mo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#d47010" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+              <marker id="mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#4a7cc9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+            </defs>
 
-          <!-- ── FLOW arrows (orange solid) ── -->
-          <!-- Predefinición → Recogida (down) -->
-          <line x1="200" y1="124" x2="200" y2="198" stroke="#e8880a" stroke-width="2" marker-end="url(#arr-o)"/>
-          <!-- Recogida → Definición (right) -->
-          <line x1="300" y1="242" x2="336" y2="242" stroke="#e8880a" stroke-width="2" marker-end="url(#arr-o)"/>
-          <!-- Definición → Criterios (down) -->
-          <line x1="436" y1="286" x2="436" y2="370" stroke="#e8880a" stroke-width="2" marker-end="url(#arr-o)"/>
-          <!-- Criterios → Formulación (left) -->
-          <line x1="336" y1="408" x2="300" y2="408" stroke="#e8880a" stroke-width="2" marker-end="url(#arr-o)"/>
-          <!-- Formulación → Valoración: go left out then down then right in -->
-          <path d="M 100 408 L 66 408 L 66 490 L 100 490"
-                fill="none" stroke="#e8880a" stroke-width="2" marker-end="url(#arr-o)"/>
-          <!-- Valoración → Decisión (right) -->
-          <line x1="300" y1="508" x2="336" y2="508" stroke="#e8880a" stroke-width="2" marker-end="url(#arr-o)"/>
+            <!-- Iteration loop enclosing all steps except Decisión -->
+            <!-- Left rail: y=56 to y=412 (bottom of Valoración) -->
+            <line x1="18" y1="56" x2="18" y2="412" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5"/>
+            <!-- Right rail: y=56 to y=316 (bottom of Formulación criterios) -->
+            <line x1="322" y1="56" x2="322" y2="316" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5"/>
+            <!-- Top connector -->
+            <line x1="18" y1="56" x2="322" y2="56" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5"/>
+            <!-- Arrow heads pointing INTO left nodes at various points -->
+            <path d="M 18 112 L 30 112" fill="none" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5" marker-end="url(#mb)"/>
+            <path d="M 18 186 L 30 186" fill="none" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5" marker-end="url(#mb)"/>
+            <path d="M 18 286 L 30 286" fill="none" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5" marker-end="url(#mb)"/>
+            <path d="M 322 186 L 310 186" fill="none" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5" marker-end="url(#mb)"/>
+            <path d="M 322 286 L 310 286" fill="none" stroke="#4a7cc9" stroke-width="1.2" stroke-dasharray="5 3.5" marker-end="url(#mb)"/>
+            <!-- Left bottom return to Predefinición -->
+            <path d="M 18 412 L 18 76 " fill="none" stroke="none"/>
 
-          <!-- ── PREDEFINICIÓN (left col, row 1) ── -->
-          <g class="dg-node" id="n-predefinicion" onclick="showDetail('predefinicion')">
-            <rect class="etapa-rect" x="100" y="62" width="200" height="60" rx="4"
-                  fill="#1a2744" stroke="#2e4070" stroke-width="1"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="600"
-                  fill="#ffffff" x="200" y="84" text-anchor="middle" dominant-baseline="central">Predefinición</text>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12"
-                  fill="rgba(255,255,255,0.65)" x="200" y="104" text-anchor="middle" dominant-baseline="central">(Hipótesis)</text>
-          </g>
-          <g class="dg-node" id="pm-predefinicion" onclick="showDetail('predefinicion')">
-            <rect class="postura-rect" x="128" y="134" width="144" height="26" rx="2" fill="#c0392b"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="200" y="147" text-anchor="middle" dominant-baseline="central">Espontánea</text>
-          </g>
+            <!-- FLOW ARROWS (orange) -->
+            <!-- Predefinición → Recogida (down) -->
+            <line x1="110" y1="96" x2="110" y2="134" stroke="#d47010" stroke-width="1.8" marker-end="url(#mo)"/>
+            <!-- Recogida → Definición (right) -->
+            <line x1="192" y1="168" x2="218" y2="168" stroke="#d47010" stroke-width="1.8" marker-end="url(#mo)"/>
+            <!-- Definición → Criterios (down) -->
+            <line x1="274" y1="202" x2="274" y2="244" stroke="#d47010" stroke-width="1.8" marker-end="url(#mo)"/>
+            <!-- Criterios → Formulación alt (left arrow) -->
+            <line x1="218" y1="272" x2="192" y2="272" stroke="#d47010" stroke-width="1.8" marker-end="url(#mo)"/>
+            <!-- Formulación → Valoración (down) -->
+            <line x1="110" y1="316" x2="110" y2="354" stroke="#d47010" stroke-width="1.8" marker-end="url(#mo)"/>
+            <!-- Valoración → Decisión (right) -->
+            <line x1="192" y1="392" x2="218" y2="392" stroke="#d47010" stroke-width="1.8" marker-end="url(#mo)"/>
 
-          <!-- ── DEFINICIÓN DEL PROBLEMA (right col, row 1) ── -->
-          <g class="dg-node" id="n-definicion" onclick="showDetail('definicion')">
-            <rect class="etapa-rect" x="336" y="62" width="200" height="60" rx="4"
-                  fill="#1a2744" stroke="#2e4070" stroke-width="1"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="600"
-                  fill="#ffffff" x="436" y="84" text-anchor="middle" dominant-baseline="central">Definición</text>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12"
-                  fill="rgba(255,255,255,0.65)" x="436" y="104" text-anchor="middle" dominant-baseline="central">del problema</text>
-          </g>
-          <g class="dg-node" id="pm-definicion" onclick="showDetail('definicion')">
-            <rect class="postura-rect" x="364" y="134" width="144" height="26" rx="2" fill="#c0392b"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="436" y="147" text-anchor="middle" dominant-baseline="central">Rigurosa</text>
-          </g>
+            <!-- ── LEFT COLUMN ── (x=30, w=162) -->
 
-          <!-- ── RECOGIDA + CLASIFICACIÓN (left col, row 2) ── -->
-          <g class="dg-node" id="n-recogida" onclick="showDetail('recogida')">
-            <rect class="etapa-rect" x="100" y="198" width="200" height="80" rx="4"
-                  fill="#1a2744" stroke="#2e4070" stroke-width="1"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="600"
-                  fill="#ffffff" x="200" y="220" text-anchor="middle" dominant-baseline="central">Recogida de</text>
-            <text font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="600"
-                  fill="#ffffff" x="200" y="240" text-anchor="middle" dominant-baseline="central">Información</text>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12"
-                  fill="rgba(255,255,255,0.65)" x="200" y="262" text-anchor="middle" dominant-baseline="central">Clasificación de la información</text>
-          </g>
-          <!-- Two postura badges side by side -->
-          <g class="dg-node" id="pm-recogida" onclick="showDetail('recogida')">
-            <rect class="postura-rect" x="100" y="290" width="96" height="26" rx="2" fill="#c0392b"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="148" y="303" text-anchor="middle" dominant-baseline="central">Espontánea</text>
-            <rect class="postura-rect" x="204" y="290" width="96" height="26" rx="2" fill="#c0392b"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="252" y="303" text-anchor="middle" dominant-baseline="central">Rigurosa</text>
-          </g>
+            <!-- PREDEFINICIÓN y=56 h=40 -->
+            <g class="dng" id="nd-pre" onclick="dpSel('pre')">
+              <rect class="nb" x="30" y="56" width="162" height="40" rx="4" fill="#1a2744" stroke="#2e4580" stroke-width="0.5"/>
+              <text font-family="sans-serif" font-size="12" font-weight="500" fill="#fff" x="111" y="76" text-anchor="middle" dominant-baseline="central">Predefinición (Hipótesis)</text>
+            </g>
 
-          <!-- ── FORMULACIÓN CRITERIOS (right col, row 3) ── -->
-          <g class="dg-node" id="n-criterios" onclick="showDetail('criterios')">
-            <rect class="etapa-rect" x="336" y="370" width="200" height="60" rx="4"
-                  fill="#1a2744" stroke="#2e4070" stroke-width="1"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="600"
-                  fill="#ffffff" x="436" y="392" text-anchor="middle" dominant-baseline="central">Formulación</text>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12"
-                  fill="rgba(255,255,255,0.65)" x="436" y="412" text-anchor="middle" dominant-baseline="central">de criterios de valoración</text>
-          </g>
-          <g class="dg-node" id="pm-criterios" onclick="showDetail('criterios')">
-            <rect class="postura-rect" x="364" y="442" width="144" height="26" rx="2" fill="#c0392b"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="436" y="455" text-anchor="middle" dominant-baseline="central">Rigurosa</text>
-          </g>
+            <!-- RECOGIDA y=134 h=56 -->
+            <g class="dng" id="nd-rec" onclick="dpSel('rec')">
+              <rect class="nb" x="30" y="134" width="162" height="56" rx="4" fill="#1a2744" stroke="#2e4580" stroke-width="0.5"/>
+              <text font-family="sans-serif" font-size="12" font-weight="500" fill="#fff" x="111" y="154" text-anchor="middle" dominant-baseline="central">Recogida de información</text>
+              <text font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.6)" x="111" y="175" text-anchor="middle" dominant-baseline="central">Clasificación de la información</text>
+            </g>
 
-          <!-- ── FORMULACIÓN ALTERNATIVAS (left col, row 3) ── -->
-          <g class="dg-node" id="n-formulacion" onclick="showDetail('formulacion')">
-            <rect class="etapa-rect" x="100" y="370" width="200" height="60" rx="4"
-                  fill="#1a2744" stroke="#2e4070" stroke-width="1"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="600"
-                  fill="#ffffff" x="200" y="392" text-anchor="middle" dominant-baseline="central">Formulación</text>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12"
-                  fill="rgba(255,255,255,0.65)" x="200" y="412" text-anchor="middle" dominant-baseline="central">de alternativas</text>
-          </g>
-          <g class="dg-node" id="pm-formulacion" onclick="showDetail('formulacion')">
-            <rect class="postura-rect" x="128" y="442" width="144" height="26" rx="2" fill="#c0392b"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="200" y="455" text-anchor="middle" dominant-baseline="central">Espontánea</text>
-          </g>
+            <!-- FORMULACIÓN ALTERNATIVAS y=244 h=40 + padding to center with criterios h=56 -->
+            <!-- Criterios is y=244 h=56, so its center is y=272. Formulación alt center should also be 272. h=40 → y=252 -->
+            <g class="dng" id="nd-for" onclick="dpSel('for')">
+              <rect class="nb" x="30" y="252" width="162" height="40" rx="4" fill="#1a2744" stroke="#2e4580" stroke-width="0.5"/>
+              <text font-family="sans-serif" font-size="12" font-weight="500" fill="#fff" x="111" y="272" text-anchor="middle" dominant-baseline="central">Formulación de alternativas</text>
+            </g>
 
-          <!-- ── VALORACIÓN ALTERNATIVAS (left col, row 4) ── -->
-          <g class="dg-node" id="n-valoracion" onclick="showDetail('valoracion')">
-            <rect class="etapa-rect" x="100" y="480" width="200" height="60" rx="4"
-                  fill="#1a2744" stroke="#2e4070" stroke-width="1"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="600"
-                  fill="#ffffff" x="200" y="502" text-anchor="middle" dominant-baseline="central">Valoración</text>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12"
-                  fill="rgba(255,255,255,0.65)" x="200" y="522" text-anchor="middle" dominant-baseline="central">de alternativas</text>
-          </g>
-          <g class="dg-node" id="pm-valoracion" onclick="showDetail('valoracion')">
-            <rect class="postura-rect" x="128" y="552" width="144" height="26" rx="2" fill="#c0392b"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="200" y="565" text-anchor="middle" dominant-baseline="central">Rigurosa</text>
-          </g>
+            <!-- VALORACIÓN ALTERNATIVAS y=354 h=40 (same y as Decisión) -->
+            <g class="dng" id="nd-val" onclick="dpSel('val')">
+              <rect class="nb" x="30" y="354" width="162" height="40" rx="4" fill="#1a2744" stroke="#2e4580" stroke-width="0.5"/>
+              <text font-family="sans-serif" font-size="12" font-weight="500" fill="#fff" x="111" y="374" text-anchor="middle" dominant-baseline="central">Valoración de alternativas</text>
+            </g>
 
-          <!-- ── DECISIÓN (right col, row 4) ── -->
-          <g class="dg-node" id="n-decision" onclick="showDetail('decision')">
-            <rect class="etapa-rect" x="336" y="480" width="200" height="60" rx="4"
-                  fill="#1a2744" stroke="#2e4070" stroke-width="1"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="16" font-weight="700"
-                  fill="#ffffff" x="436" y="510" text-anchor="middle" dominant-baseline="central">DECISIÓN</text>
-          </g>
-          <g class="dg-node" id="pm-decision" onclick="showDetail('decision')">
-            <rect class="postura-rect" x="352" y="552" width="168" height="26" rx="2" fill="#1e6b3a"/>
-            <text font-family="'Source Sans 3',sans-serif" font-size="12" font-weight="700"
-                  fill="#ffffff" x="436" y="565" text-anchor="middle" dominant-baseline="central">Conducta electiva</text>
-          </g>
+            <!-- ── RIGHT COLUMN ── (x=218, w=112) -->
 
-        </svg>
-      </div>
+            <!-- DEFINICIÓN DEL PROBLEMA y=134 h=56 (same row as Recogida) -->
+            <g class="dng" id="nd-def" onclick="dpSel('def')">
+              <rect class="nb" x="218" y="134" width="112" height="56" rx="4" fill="#1a2744" stroke="#2e4580" stroke-width="0.5"/>
+              <text font-family="sans-serif" font-size="12" font-weight="500" fill="#fff" x="274" y="154" text-anchor="middle" dominant-baseline="central">Definición</text>
+              <text font-family="sans-serif" font-size="12" font-weight="500" fill="#fff" x="274" y="175" text-anchor="middle" dominant-baseline="central">del problema</text>
+            </g>
 
-      <!-- Detail panel -->
-      <div class="detail-panel" id="detail-panel">
-        <div class="dp-eyebrow" id="dp-eyebrow"></div>
-        <div class="dp-title" id="dp-title"></div>
-        <div class="dp-badge" id="dp-badge"></div>
-        <div class="dp-body" id="dp-body"></div>
-      </div>
+            <!-- FORMULACIÓN CRITERIOS y=244 h=56 (same row as Formulación alt) -->
+            <g class="dng" id="nd-cri" onclick="dpSel('cri')">
+              <rect class="nb" x="218" y="244" width="112" height="56" rx="4" fill="#1a2744" stroke="#2e4580" stroke-width="0.5"/>
+              <text font-family="sans-serif" font-size="12" font-weight="500" fill="#fff" x="274" y="263" text-anchor="middle" dominant-baseline="central">Formulación</text>
+              <text font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.65)" x="274" y="282" text-anchor="middle" dominant-baseline="central">criterios de valoración</text>
+            </g>
+
+            <!-- DECISIÓN y=372 h=40 (right col, same row as Valoración center) -->
+            <g class="dng" id="nd-dec" onclick="dpSel('dec')">
+              <rect class="nb" x="218" y="372" width="112" height="40" rx="4" fill="#1e3a28" stroke="#2e6040" stroke-width="0.5"/>
+              <text font-family="sans-serif" font-size="13" font-weight="500" fill="#fff" x="274" y="392" text-anchor="middle" dominant-baseline="central">DECISIÓN</text>
+            </g>
+
+          </svg>
+        </div>
+
+        <!-- Detail panel -->
+        <div class="detail-panel" id="detail-panel">
+          <div class="dp-empty" id="dp-empty">
+            <div class="hint">←</div>
+            <div>Haz clic en cualquier etapa<br>para ver su descripción</div>
+          </div>
+          <div class="dp-content" id="dp-content">
+            <div class="dp-eyebrow" id="dp-eyebrow"></div>
+            <div class="dp-title" id="dp-title"></div>
+            <span class="dp-chip" id="dp-chip"></span>
+            <div class="dp-desc" id="dp-desc"></div>
+            <div class="dp-mental" id="dp-mental"></div>
+          </div>
+        </div>
+
+      </div><!-- /diagram-body -->
 
       <div class="diagram-note">
         <span class="diagram-note-icon">⟳</span>
         <span class="diagram-note-text">
-          <strong>Proceso de iteración:</strong> Las conclusiones obtenidas al término de cualquier etapa pueden aconsejar retornar a una etapa anterior. Esta iteración es consustancial al método y no indica fracaso.
+          <strong>Iteración:</strong> Las conclusiones de cada etapa pueden llevar a retomar cualquier etapa anterior. La Decisión es el único punto sin retorno.
         </span>
       </div>
     </div><!-- /diagram-section -->
-
-    <!-- ═══════════════════════════════════════════
-         DESCRIPCIÓN ETAPAS
-    ════════════════════════════════════════════ -->
-    <div class="page-header" style="margin-bottom:20px;margin-top:0;">
-      <span class="eyebrow">Descripción de las etapas</span>
-      <h1>Postura mental requerida</h1>
-      <div class="gold-rule"></div>
-    </div>
-
-    <p style="font-family:var(--font-body);font-size:15.5px;color:var(--ink-mid);line-height:1.75;margin-bottom:20px;">
-      Cada etapa exige una postura mental diferente. Algunas requieren <strong>espontaneidad</strong> —recogida de información, formulación de alternativas— anotando todo sin filtrar por orden ni importancia. Otras exigen <strong>rigor lógico</strong> —clasificación, criterios, valoración—. La decisión final es una <strong>conducta electiva</strong>: no un razonamiento, sino un acto de elección.
-    </p>
-
-    <div class="steps-detail">
-      <div class="step-card esp">
-        <div class="step-num">Etapa 1</div>
-        <div class="step-name">Predefinición</div>
-        <span class="step-mental esp">Espontánea</span>
-        <p class="step-desc">Formulación inicial del problema como hipótesis provisional. No definitiva. Evita el <em>diagnóstico sintomático</em>: confundir el síntoma con el problema real.</p>
-      </div>
-      <div class="step-card esp">
-        <div class="step-num">Etapa 2</div>
-        <div class="step-name">Recogida de Información</div>
-        <span class="step-mental esp">Espontánea</span>
-        <p class="step-desc">Anotar todo lo relevante sin filtrar. Clave: distinguir siempre <strong>hechos</strong> (verificados) de <strong>opiniones</strong> (apreciaciones personales).</p>
-      </div>
-      <div class="step-card rig">
-        <div class="step-num">Etapa 2b</div>
-        <div class="step-name">Clasificación de la Información</div>
-        <span class="step-mental rig">Rigurosa</span>
-        <p class="step-desc">Organizar la información recogida para poder manejarla: por áreas funcionales, por relevancia o por tipo. Prepara el terreno para la definición del problema.</p>
-      </div>
-      <div class="step-card rig">
-        <div class="step-num">Etapa 3</div>
-        <div class="step-name">Definición del Problema</div>
-        <span class="step-mental rig">Rigurosa</span>
-        <p class="step-desc"><em>«Un problema bien definido es un problema parcialmente resuelto.»</em> Analizar la relación entre síntomas y llegar a una síntesis. Evitar suposiciones gratuitas.</p>
-      </div>
-      <div class="step-card rig">
-        <div class="step-num">Etapa 4</div>
-        <div class="step-name">Criterios de Valoración</div>
-        <span class="step-mental rig">Rigurosa</span>
-        <p class="step-desc">Hacer explícitos los criterios que guiarán la evaluación. Son consecuencia lógica de los objetivos del decisor. Sin criterios explícitos no hay evaluación rigurosa.</p>
-      </div>
-      <div class="step-card esp">
-        <div class="step-num">Etapa 5</div>
-        <div class="step-name">Formulación de Alternativas</div>
-        <span class="step-mental esp">Espontánea</span>
-        <p class="step-desc">Anotar todas las alternativas posibles sin filtrar por factibilidad. La espontaneidad evita el "carril mental" que cierra el pensamiento a otras soluciones.</p>
-      </div>
-      <div class="step-card rig">
-        <div class="step-num">Etapa 6</div>
-        <div class="step-name">Valoración de Alternativas</div>
-        <span class="step-mental rig">Rigurosa</span>
-        <p class="step-desc">Confrontar cada alternativa con los criterios formulados. Analizar factibilidad, riesgos y costes. Útil construir una <em>matriz</em> alternativas × criterios.</p>
-      </div>
-      <div class="step-card ele">
-        <div class="step-num">Final</div>
-        <div class="step-name">Decisión</div>
-        <span class="step-mental ele">Conducta electiva</span>
-        <p class="step-desc">Acto de elegir entre las alternativas valoradas. No es un razonamiento: es una elección. La decisión emerge del proceso, no lo sustituye.</p>
-      </div>
-    </div>
 
     <div class="principle-box">
       <p>«Un problema bien definido es un problema parcialmente resuelto. Muchos problemas no llegan a resolverse porque nos resistimos a definirlos tal como son.»</p>
@@ -518,64 +261,42 @@
 
 <script src="nav.js"></script>
 <script>
-var DETAIL = {
-  predefinicion: {
-    eyebrow: 'Etapa 1',
-    title: 'Predefinición (Hipótesis)',
-    badge: '<span class="badge-esp">Espontánea</span>',
-    body: 'Antes de buscar información es necesario <strong>"sentir" que existe un problema</strong>. Esta percepción inicial no debe tomarse como definitiva, sino como hipótesis que los hechos habrán de confirmar o desmentir.<br><br>Si se adopta esta precaución se evitará el <strong>diagnóstico sintomático</strong>: confundir el síntoma con el problema real. Sentir un problema implica percibir una <em>desviación de los acontecimientos cara a un objetivo</em>.'
-  },
-  recogida: {
-    eyebrow: 'Etapa 2',
-    title: 'Recogida y Clasificación de Información',
-    badge: '<span class="badge-esp">Espontánea</span> <span class="badge-rig">Rigurosa</span>',
-    body: 'Anotar <strong>todo lo que parezca relevante</strong> sin preocuparse por el orden ni la importancia. Postura abierta, como en un brainstorming.<br><br>Distinción fundamental: <strong>Hecho</strong> = verificado por observación o testimonio fidedigno. <strong>Opinión</strong> = apreciación personal.<br><br>La sub-etapa de <em>clasificación</em> (rigurosa) organiza la información recogida para poder manejarla: por áreas funcionales, por tipo o por relevancia.'
-  },
-  definicion: {
-    eyebrow: 'Etapa 3',
-    title: 'Definición del Problema',
-    badge: '<span class="badge-rig">Rigurosa</span>',
-    body: 'Etapa <strong>crucial</strong>. Analizar rigurosamente la relación entre los hechos identificados (síntomas) para llegar a una síntesis.<br><br><em>"Un problema bien definido es un problema parcialmente resuelto."</em><br><br>Muchos problemas no se resuelven porque nos resistimos a definirlos tal como son. Esta etapa está estrechamente ligada a la formulación de criterios de valoración: ambas forman una unidad conceptual.'
-  },
-  criterios: {
-    eyebrow: 'Etapa 4',
-    title: 'Formulación de Criterios de Valoración',
-    badge: '<span class="badge-rig">Rigurosa</span>',
-    body: 'Hacer <strong>explícitos los criterios</strong> que guiarán la evaluación de alternativas. Muchas decisiones se toman por corazonada, casi sin considerar el objetivo final.<br><br>Los criterios son consecuencia lógica de los objetivos del decisor. Solo si se hacen explícitos se puede tener seguridad de que la alternativa elegida apunta a los propios objetivos.'
-  },
-  formulacion: {
-    eyebrow: 'Etapa 5',
-    title: 'Formulación de Alternativas',
-    badge: '<span class="badge-esp">Espontánea</span>',
-    body: 'Anotar <strong>todas las alternativas</strong> posibles sin preocuparse por su factibilidad.<br><br>La espontaneidad evita el <em>"carril mental"</em> que bloquea la creatividad. En grupo requiere un clima de apertura total: no criticar ni evaluar mientras se formulan alternativas.'
-  },
-  valoracion: {
-    eyebrow: 'Etapa 6',
-    title: 'Valoración de Alternativas',
-    badge: '<span class="badge-rig">Rigurosa</span>',
-    body: 'Ver el grado en que las alternativas formuladas se ajustan a los criterios establecidos, y examinar su <strong>factibilidad</strong>: riesgos, costes, consecuencias.<br><br>Cuando hay mucha diversidad puede ser útil construir una <em>matriz</em> alternativas × criterios. Al final de esta etapa el terreno está preparado para la decisión.'
-  },
-  decision: {
-    eyebrow: 'Etapa Final',
-    title: 'Decisión',
-    badge: '<span style="background:#1e6b3a;color:#fff;padding:2px 10px;border-radius:3px;font-size:12px;font-weight:700;display:inline-block">Conducta electiva</span>',
-    body: 'La decisión es el <strong>acto de elegir</strong> una alternativa entre las debidamente elaboradas y valoradas.<br><br>No es un razonamiento: es una <em>conducta electiva</em>. La resolución de problemas es constitutivamente un razonamiento; la decisión, una elección. El proceso prepara el terreno; la decisión lo corona.'
-  }
+var DP={
+  pre:{eyebrow:'Etapa 1',title:'Predefinición',chip:'Espontánea',cls:'esp',
+    desc:'Percepción inicial de que existe un problema. Se trata como hipótesis provisional, no como diagnóstico definitivo. Evita el error de confundir el síntoma con el problema real.',
+    mental:'<strong>Postura espontánea:</strong> Se anota la primera percepción sin filtrarla ni depurarla. Los hechos posteriores la confirmarán o desmentirán. Sentir el problema implica percibir una desviación de un objetivo propio.'},
+  rec:{eyebrow:'Etapa 2',title:'Recogida y clasificación de información',chip:'Espontánea + Rigurosa',cls:'esp',
+    desc:'Recoger todo lo relevante (espontáneo), luego clasificarlo para manejarlo (riguroso). Distinción clave: hecho = verificado por observación o testimonio. Opinión = apreciación personal.',
+    mental:'<strong>Recogida: espontánea.</strong> Anotar sin filtrar por orden ni importancia. <strong>Clasificación: rigurosa.</strong> Organizar por áreas funcionales o relevancia. Sin clasificación, la información no puede usarse.'},
+  def:{eyebrow:'Etapa 3',title:'Definición del problema',chip:'Rigurosa',cls:'rig',
+    desc:'Analizar la relación entre síntomas y llegar a una síntesis precisa del problema real. Etapa crucial: un problema bien definido es un problema parcialmente resuelto.',
+    mental:'<strong>Postura rigurosa:</strong> Sin suposiciones gratuitas. No definir el problema que resulta cómodo, sino el que realmente es. La mayoría de las decisiones fallidas tienen su origen aquí.'},
+  cri:{eyebrow:'Etapa 4',title:'Formulación de criterios de valoración',chip:'Rigurosa',cls:'rig',
+    desc:'Hacer explícitos los criterios con los que se evaluarán las alternativas. Derivan de los objetivos del decisor. Sin criterios explícitos, la elección es arbitraria.',
+    mental:'<strong>Postura rigurosa:</strong> Los criterios deben formularse antes de conocer las alternativas, para no sesgarse hacia la opción más atractiva a priori.'},
+  for:{eyebrow:'Etapa 5',title:'Formulación de alternativas',chip:'Espontánea',cls:'esp',
+    desc:'Listar todas las opciones posibles sin filtrar por factibilidad. La apertura evita el "carril mental" que bloquea soluciones creativas. En grupo, sin crítica prematura.',
+    mental:'<strong>Postura espontánea:</strong> No juzgar mientras se genera. El objetivo es amplitud, no profundidad. La evaluación rigurosa viene en la etapa siguiente.'},
+  val:{eyebrow:'Etapa 6',title:'Valoración de alternativas',chip:'Rigurosa',cls:'rig',
+    desc:'Confrontar cada alternativa con los criterios establecidos. Examinar factibilidad, riesgos y costes. Útil construir una matriz alternativas × criterios cuando hay mucha variedad.',
+    mental:'<strong>Postura rigurosa:</strong> Evaluación sistemática, no intuitiva. Al terminar esta etapa el terreno está preparado para la decisión final.'},
+  dec:{eyebrow:'Etapa final',title:'Decisión',chip:'Conducta electiva',cls:'ele',
+    desc:'Acto de elegir entre las alternativas valoradas. No es un razonamiento: es una elección. El proceso la fundamenta pero no la sustituye. Es el único punto sin iteración.',
+    mental:'<strong>Conducta electiva:</strong> La decisión es irreversible por naturaleza. El proceso previo reduce incertidumbre, pero no la elimina. Decidir es asumir esa responsabilidad.'}
 };
-
-function showDetail(id) {
-  var d = DETAIL[id];
-  if (!d) return;
-  document.querySelectorAll('.dg-node').forEach(function(n){ n.classList.remove('selected'); });
-  ['n-','pm-'].forEach(function(prefix){
-    var el = document.getElementById(prefix + id);
-    if (el) el.classList.add('selected');
-  });
-  document.getElementById('dp-eyebrow').textContent = d.eyebrow;
-  document.getElementById('dp-title').textContent = d.title;
-  document.getElementById('dp-badge').innerHTML = d.badge;
-  document.getElementById('dp-body').innerHTML = d.body;
-  document.getElementById('detail-panel').classList.add('visible');
+function dpSel(id){
+  document.querySelectorAll('.dng').forEach(function(n){n.classList.remove('sel');});
+  var nd=document.getElementById('nd-'+id);
+  if(nd) nd.classList.add('sel');
+  var d=DP[id];
+  document.getElementById('dp-eyebrow').textContent=d.eyebrow;
+  document.getElementById('dp-title').textContent=d.title;
+  var c=document.getElementById('dp-chip');
+  c.textContent=d.chip; c.className='dp-chip '+d.cls;
+  document.getElementById('dp-desc').textContent=d.desc;
+  document.getElementById('dp-mental').innerHTML=d.mental;
+  document.getElementById('dp-empty').style.display='none';
+  document.getElementById('dp-content').style.display='block';
 }
 </script>
 </body>
