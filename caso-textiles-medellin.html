@@ -5,28 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Textiles Medellín — Análisis de Situaciones de Negocio</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .case-hero { background:var(--navy); padding:52px 48px 44px; position:relative; overflow:hidden; border-bottom:3px solid var(--gold); }
+    .case-hero::after { content:'"'; position:absolute; right:48px; top:20px; font-family:var(--font-title); font-size:200px; color:rgba(201,168,76,0.06); line-height:1; pointer-events:none; }
+    .case-hero-inner { position:relative; z-index:1; max-width:680px; }
+    .case-hero-code { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .case-hero-code::before { content:''; display:inline-block; width:24px; height:1px; background:var(--gold); }
+    .case-hero h1 { font-family:var(--font-title); font-size:38px; font-weight:700; color:var(--white); line-height:1.2; margin-bottom:14px; }
+    .case-hero-quote { font-family:var(--font-body); font-size:15px; color:rgba(255,255,255,.55); font-style:italic; line-height:1.65; border-left:2px solid rgba(201,168,76,.4); padding-left:16px; margin-bottom:22px; }
+    .case-hero-meta { display:flex; flex-wrap:wrap; gap:12px; }
+    .meta-chip { font-family:var(--font-ui); font-size:11.5px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.7); padding:5px 12px; border-radius:20px; display:flex; align-items:center; gap:6px; }
+    .meta-chip strong { color:var(--gold-light); }
+    .sub-label { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+    .sub-heading { font-family:var(--font-title); font-size:20px; font-weight:600; color:var(--navy); margin-bottom:12px; }
+    .body-text { font-family:var(--font-body); font-size:15.5px; color:var(--ink-mid); line-height:1.75; margin-bottom:14px; }
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+    @media(max-width:650px){.info-grid{grid-template-columns:1fr}}
+    .info-item { background:var(--white); border:1px solid var(--border-light); border-radius:var(--radius); padding:16px 18px; }
+    .info-item-label { font-family:var(--font-ui); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-light); margin-bottom:5px; }
+    .info-item-value { font-family:var(--font-ui); font-size:14px; color:var(--ink); line-height:1.5; }
+    .comp-wrapper { overflow-x:auto; margin:16px 0; }
+    .calc-box { background:var(--navy); border-radius:var(--radius); padding:22px 26px; margin:16px 0; font-family:'Source Sans 3',monospace; }
+    .calc-line { color:rgba(255,255,255,.65); font-size:13.5px; line-height:2; }
+    .calc-line .op { color:var(--gold); }
+    .calc-result { color:var(--white); font-size:17px; font-weight:700; border-top:1px solid rgba(201,168,76,.3); padding-top:10px; margin-top:6px; }
+    .calc-result .big { font-size:22px; color:var(--gold-light); }
+    .decision-box { background:var(--navy); border:2px solid var(--gold); border-radius:var(--radius-lg); padding:32px 36px; margin-top:28px; }
+    .decision-box-label { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+    .decision-box-main { font-family:var(--font-title); font-size:24px; font-weight:600; color:var(--white); line-height:1.35; margin-bottom:14px; }
+    .decision-box-rationale { font-family:var(--font-body); font-size:15px; color:rgba(255,255,255,.65); line-height:1.7; font-style:italic; }
+    .pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:12px 0; }
+    .pros-col,.cons-col { border-radius:var(--radius); padding:18px 20px; }
+    .pros-col { background:#edf5f0; border:1px solid #8acc8a; }
+    .cons-col { background:#fdf0f2; border:1px solid #e8a0a8; }
+    .pros-col h4 { font-family:var(--font-ui); font-size:12px; font-weight:700; color:var(--green-accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
+    .cons-col h4 { font-family:var(--font-ui); font-size:12px; font-weight:700; color:var(--red-accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
+    .pros-col ul,.cons-col ul { list-style:none; font-family:var(--font-ui); font-size:13px; color:var(--ink); line-height:1.7; }
+    .pros-col ul li::before { content:"+ "; color:var(--green-accent); font-weight:700; }
+    .cons-col ul li::before { content:"- "; color:var(--red-accent); font-weight:700; }
+    .matrix-table { width:100%; border-collapse:collapse; font-family:var(--font-ui); font-size:13px; }
+    .matrix-table th { background:var(--navy); color:var(--gold-light); padding:10px 14px; text-align:center; font-size:11.5px; font-weight:600; }
+    .matrix-table th:first-child { text-align:left; }
+    .matrix-table td { padding:9px 14px; border-bottom:1px solid var(--border-light); color:var(--ink-mid); vertical-align:top; }
+    .matrix-table td:not(:first-child) { text-align:center; }
+    .matrix-table tr:nth-child(even) td { background:#f8f6f1; }
+    .score-high { color:var(--green-accent); font-weight:700; }
+    .score-mid  { color:#8a6000; font-weight:600; }
+    .score-low  { color:var(--red-accent); font-weight:700; }
+    @media(max-width:650px){.pros-cons{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
+
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <span class="subject-label">Asignatura</span>
-    <span class="subject-title">Análisis de Situaciones de Negocio</span>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-label">Inicio</div>
-    <a href="index.html" class="nav-item"><span class="nav-icon">◈</span> Metodología</a>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-label">Casos</div>
-    <a href="caso-textiles-medellin.html" class="nav-item active"><span class="nav-icon">●</span> Textiles Medellín</a>
-    <a href="caso-ricks-cafe.html" class="nav-item"><span class="nav-icon">●</span> Rick's Cafe Americain</a>
-    <a href="caso-alimentacion-gorki.html" class="nav-item placeholder"><span class="nav-icon">○</span> Alimentación Gorki <span class="nav-badge">Próximo</span></a>
-    <a href="caso-programacion-avanzada.html" class="nav-item placeholder"><span class="nav-icon">○</span> Servicios de Programación <span class="nav-badge">Próximo</span></a>
-  </div>
-  <div class="sidebar-footer">Análisis de Situaciones de Negocio<br>Material de estudio y repaso</div>
-</nav>
+<nav class="sidebar" id="sidebar"></nav>
+
 <main class="main">
+  <div class="case-hero">
+    <div class="case-hero-inner">
+      <div class="case-hero-code">Caso 01 — ASNI-10</div>
+      <h1>Textiles Medellín, S.L.</h1>
+      <div class="case-hero-quote">
+        «¿Debo comprar esta empresa? ¿Qué riesgos reales tiene la compra y cómo controlarlos? ¿Será el sitio adecuado para ejercer mi actividad profesional y empresarial?»
+      </div>
+      <div class="case-hero-meta">
+        <span class="meta-chip"><strong>Protagonista:</strong> Edgardo Olarte</span>
+        <span class="meta-chip"><strong>Lugar:</strong> Medellín, Colombia</span>
+        <span class="meta-chip"><strong>Fecha:</strong> Marzo 2008</span>
+        <span class="meta-chip"><strong>Sector:</strong> Confección textil</span>
+        <span class="meta-chip"><strong>Decisión:</strong> Adquisición 33% empresa</span>
+      </div>
+    </div>
+  </div>
+
   <div class="topbar">
     <div class="topbar-breadcrumb">
       <a href="index.html" style="color:var(--ink-light);text-decoration:none;">Inicio</a>
@@ -34,24 +85,462 @@
       <span class="current">Textiles Medellín</span>
     </div>
     <div class="topbar-meta">
+      <span class="topbar-tag">Inversión</span>
+      <span class="topbar-tag">Análisis financiero</span>
       <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
   </div>
+
   <div class="page-content">
-    <div class="page-header mt-32">
-      <span class="eyebrow">Caso 01</span>
-      <h1>Textiles Medellín</h1>
-      <div class="gold-rule"></div>
-      <p class="subtitle">Este caso está en preparación y estará disponible próximamente con el análisis completo aplicando el método científico de toma de decisiones.</p>
-    </div>
-    <div class="callout callout-navy">
-      <strong>En preparación.</strong> Cuando se incorpore el material del caso, esta página incluirá: predefinición, recogida y clasificación de información, definición del problema, criterios de valoración, análisis de alternativas y decisión recomendada.
-    </div>
-    <p style="margin-top:32px;">
-      <a href="index.html" style="font-family:var(--font-ui);font-size:14px;color:var(--navy);text-decoration:none;">← Volver a la metodología</a>
-    </p>
-  </div>
+    <div class="tabs-wrapper">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-metodo">Método aplicado</button>
+        <button class="tab-btn" data-tab="tab-financiero">Análisis financiero</button>
+        <button class="tab-btn" data-tab="tab-alternativas">Alternativas</button>
+        <button class="tab-btn" data-tab="tab-decision">Decisión</button>
+        <button class="tab-btn" data-tab="tab-datos">Datos del caso</button>
+      </div>
+
+      <!-- ══ TAB 1: MÉTODO ══ -->
+      <div class="tab-pane active" id="tab-metodo">
+
+        <!-- PASO 1 -->
+        <div class="case-section">
+          <h2 class="section-title mt-0"><span class="step-num">1</span>Predefinición (Hipótesis inicial)</h2>
+          <p class="section-intro"><span class="card-badge badge-espontanea">Postura espontánea</span></p>
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">¿Cuál es la hipótesis de partida?</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <p class="body-text">Edgardo Olarte, 2 de marzo de 2008. Lleva una semana pensando en la oferta de adquirir el 33% de Textiles Medellín por 120.000 USD. La hipótesis inicial: <em>"Es una oportunidad de convertirme en empresario en un sector que conozco, con socios de confianza, en un momento de posible expansión del mercado."</em></p>
+              <div class="callout callout-gold"><strong>Atención al diagnóstico sintomático:</strong> La urgencia de la decisión ("debo llamar hoy") es un síntoma emocional —la presión de los socios y el deseo de emprender—, no el problema real. El problema es si la inversión es viable y si Textiles Medellín es el vehículo adecuado.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="case-section">
+          <h2 class="section-title"><span class="step-num">2</span>Recogida y Clasificación de Información</h2>
+          <p class="section-intro"><span class="card-badge badge-espontanea">Recogida: espontánea</span>&nbsp;&nbsp;<span class="card-badge badge-rigurosa">Clasificación: rigurosa</span></p>
+
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">A. Situación personal de Edgardo</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item"><div class="info-item-label">Situación actual</div><div class="info-item-value">Director de Importaciones y Jefe de Ventas, empresa de maquinaria textil. 4 años en el puesto.</div></div>
+                <div class="info-item"><div class="info-item-label">Ingresos actuales</div><div class="info-item-value">2.000 USD fijos + 1.000 USD variable = 3.000 USD/mes</div></div>
+                <div class="info-item"><div class="info-item-label">Ingresos ofrecidos</div><div class="info-item-value">3.300 USD fijos + 15% de los beneficios anuales (igual que los socios)</div></div>
+                <div class="info-item"><div class="info-item-label">Motivación</div><div class="info-item-value">7 años pensando en ser empresario. Perfil comercial y conocimiento del sector textil.</div></div>
+                <div class="info-item"><div class="info-item-label">Financiación disponible</div><div class="info-item-value">50.000 USD propios + 70.000 USD préstamo familiar = 120.000 USD (justo el 100%)</div></div>
+                <div class="info-item"><div class="info-item-label">Situación familiar</div><div class="info-item-value">Primer hijo de 6 meses. Hipoteca personal. Capacidad de crédito bancario agotada.</div></div>
+              </div>
+              <div class="callout callout-red mt-16"><strong>Riesgo personal crítico:</strong> Si necesitara más capital en el futuro, Edgardo no tendría fuentes. Toda la inversión procede de recursos personales y familiares sin respaldo bancario adicional.</div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">B. La empresa: Textiles Medellín</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item"><div class="info-item-label">Actividad</div><div class="info-item-value">Confección de ropa informal infantil y juvenil. Fundada hace 5 años por 3 socios (ahora 2).</div></div>
+                <div class="info-item"><div class="info-item-label">Ventas históricas</div><div class="info-item-value">~2.500.000 USD/año en los 4 años anteriores. En 2007: 1.455.900 USD (caída del 42%)</div></div>
+                <div class="info-item"><div class="info-item-label">Resultado 2007</div><div class="info-item-value">Pérdida de 88.134 USD (primer año negativo)</div></div>
+                <div class="info-item"><div class="info-item-label">Deuda corto plazo</div><div class="info-item-value">140.000 USD a los propios accionistas ("efectos a accionistas")</div></div>
+                <div class="info-item"><div class="info-item-label">Fortalezas</div><div class="info-item-value">Diseño, confección de calidad, creatividad, instalaciones propias libres de hipoteca.</div></div>
+                <div class="info-item"><div class="info-item-label">Debilidades</div><div class="info-item-value">Sin gestión comercial propia, sin control de costes por colección, mezcla gastos personales y empresa.</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">C. El sector y el entorno</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item"><div class="info-item-label">Presión competitiva</div><div class="info-item-value">Importaciones desde India y Asia con diferenciales de precio del 30–50%. Un vestido nacional: 50 USD vs. importado: 30 USD.</div></div>
+                <div class="info-item"><div class="info-item-label">Oportunidades externas</div><div class="info-item-value">TLC con EE.UU. en negociación. Mejora de seguridad en Colombia: más turismo e inversión extranjera.</div></div>
+                <div class="info-item"><div class="info-item-label">Posible protección</div><div class="info-item-value">Gobierno analiza aumentar aranceles a confección importada, pero es riesgo político no garantizado.</div></div>
+                <div class="info-item"><div class="info-item-label">Tendencia del mercado</div><div class="info-item-value">El segmento medio sin diferenciación se comprime. Oportunidades reales en nichos premium y series cortas con diseño fuerte.</div></div>
+              </div>
+              <div class="callout callout-navy mt-16"><strong>Hecho vs. Opinión:</strong> Las oportunidades del TLC y los aranceles son <em>opiniones</em> de los socios, no hechos verificados. La presión de importaciones al –50% de precio es un <em>hecho</em> documentado.</div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">D. Señales de alerta del gobierno corporativo</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <p class="body-text">Varios elementos del caso revelan una gestión poco profesionalizada:</p>
+              <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:1.9;padding-left:20px;">
+                <li>El renglón "Varios" de costes (19.876 USD) incluye <strong>gastos personales</strong> de los socios (comida diaria, restaurantes, combustible familiar).</li>
+                <li>Los <strong>seguros de vida</strong> (25.000 USD) están a cargo de la empresa y son para recomprar acciones en caso de muerte: beneficio personal de los socios.</li>
+                <li>El sistema de costes es solo de <strong>costes directos</strong>; no imputan correctamente la estructura. Vendieron colecciones con descuentos del 25% sin saber si eran rentables.</li>
+                <li>Rechazaron un contrato exclusivo con <strong>ROE del 35%</strong> (superior a la media del sector) por motivos de autonomía personal.</li>
+                <li>Mantuvieron empleados 6 meses cobrando el 60% del sueldo sin trabajo real: decisión ética pero costosa sin análisis financiero.</li>
+                <li>Prevén reducir publicidad, ferias y suscripciones (fuentes de negocio) sin propuesta alternativa de generación de ventas.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="case-section">
+          <h2 class="section-title"><span class="step-num">3</span>Definición del Problema</h2>
+          <p class="section-intro"><span class="card-badge badge-rigurosa">Postura rigurosa</span></p>
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">¿Cuál es el verdadero problema de Edgardo?</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="callout callout-navy"><strong>Problema bien definido:</strong> Edgardo debe evaluar si invertir 120.000 USD (toda su capacidad financiera) en una empresa que: (1) acaba de tener su primer año en pérdidas; (2) tiene una deuda a corto plazo de 140.000 USD; (3) carece de control financiero riguroso; y (4) opera en un sector con presión estructural creciente. La pregunta no es si Edgardo quiere ser empresario, sino si <em>esta empresa</em> en <em>este momento</em> es el vehículo adecuado.</div>
+              <p class="body-text mt-16"><strong>Sub-problemas identificados:</strong></p>
+              <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;margin-bottom:12px;">
+                <li>¿La empresa tiene valor real acorde a los 120.000 USD que piden? (problema de valoración)</li>
+                <li>¿La deuda de 140.000 USD compromete la viabilidad tras la ampliación? (problema de liquidez)</li>
+                <li>¿Puede Edgardo realmente mejorar la gestión comercial y financiera? (problema de competencias)</li>
+                <li>¿Tiene sentido invertir sin capacidad de reinversión futura? (problema de estructura financiera personal)</li>
+                <li>¿Los socios aceptarán un cambio de modelo de gestión? (problema de gobernanza)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="case-section">
+          <h2 class="section-title"><span class="step-num">4</span>Criterios de Valoración</h2>
+          <p class="section-intro"><span class="card-badge badge-rigurosa">Postura rigurosa</span></p>
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">¿Qué criterios debe usar Edgardo?</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <table class="data-table">
+                <thead><tr><th>Criterio</th><th>Descripción</th><th>Peso</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Viabilidad financiera de la empresa</strong></td><td>¿La empresa puede ser rentable con una gestión mejorada?</td><td style="text-align:center">★★★★★</td></tr>
+                  <tr><td><strong>Protección familiar</strong></td><td>¿Puede sostener a su familia si el negocio tarda en recuperarse?</td><td style="text-align:center">★★★★★</td></tr>
+                  <tr><td><strong>Precio justo de la inversión</strong></td><td>¿120.000 USD por el 33% es razonable según el valor real?</td><td style="text-align:center">★★★★☆</td></tr>
+                  <tr><td><strong>Compatibilidad con los socios</strong></td><td>¿Andrés y Pedro permitirán cambios de gestión necesarios?</td><td style="text-align:center">★★★★☆</td></tr>
+                  <tr><td><strong>Alineación personal</strong></td><td>¿Su perfil comercial puede aportar el valor diferencial que falta?</td><td style="text-align:center">★★★☆☆</td></tr>
+                  <tr><td><strong>Riesgo patrimonial</strong></td><td>¿Qué ocurre si necesita más capital y no lo tiene?</td><td style="text-align:center">★★★☆☆</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-metodo -->
+
+
+      <!-- ══ TAB 2: FINANCIERO ══ -->
+      <div class="tab-pane" id="tab-financiero">
+
+        <h2 class="section-title mt-0"><span class="step-num" style="background:var(--gold-pale);color:var(--navy);">€</span>Análisis financiero</h2>
+
+        <div class="sub-label">PyG 2007 — Ajustes clave</div>
+        <div class="sub-heading">¿Cuál es el resultado real de la empresa?</div>
+        <p class="body-text">El resultado oficial de 2007 es una pérdida de 88.134 USD. Sin embargo, hay partidas que se deben analizar críticamente:</p>
+
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-value" style="color:var(--red-accent);">–88.134</div><div class="kpi-label">Resultado oficial 2007</div><div class="kpi-sub">Primera pérdida de la empresa</div></div>
+          <div class="kpi-card"><div class="kpi-value">235.190</div><div class="kpi-label">Margen bruto producción</div><div class="kpi-sub">19,3% sobre ventas netas</div></div>
+          <div class="kpi-card"><div class="kpi-value">40.070</div><div class="kpi-label">EBITDA ajustado</div><div class="kpi-sub">Eliminando gastos personales</div></div>
+          <div class="kpi-card"><div class="kpi-value" style="color:var(--red-accent);">–4.806</div><div class="kpi-label">EBITDA reportado</div><div class="kpi-sub">Sin ajustar</div></div>
+        </div>
+
+        <div class="calc-box">
+          <div class="calc-line">Resultado reportado: <span class="op">–88.134 USD</span></div>
+          <div class="calc-line">+ Intereses financieros: <span class="op">+18.328</span></div>
+          <div class="calc-line">+ Amortización: <span class="op">+65.000</span></div>
+          <div class="calc-line">= EBITDA: <span class="op">–4.806 USD</span></div>
+          <div class="calc-line">+ Gastos personales socios ("Varios"): <span class="op">+19.876</span></div>
+          <div class="calc-line">+ Seguros de vida (beneficio personal socios): <span class="op">+25.000</span></div>
+          <div class="calc-result">EBITDA ajustado: <span class="big">+40.070 USD</span></div>
+        </div>
+
+        <div class="callout callout-gold mt-8">Los gastos personales incluidos en la cuenta de resultados (44.876 USD entre "Varios" y seguros de vida) distorsionan el resultado real. Con gestión profesional, el negocio sería modestamente rentable.</div>
+
+        <div class="sub-label mt-32">Valoración de la empresa</div>
+        <div class="sub-heading">¿Es razonable pagar 120.000 USD por el 33%?</div>
+
+        <div class="comp-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Método de valoración</th><th class="num">Valor empresa</th><th class="num">Valor 33% Edgardo</th><th>Comentario</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Valor contable (fondos propios)</strong></td><td class="num">197.565</td><td class="num">65.196</td><td>Edgardo pagaría un 84% por encima del valor contable</td></tr>
+              <tr><td><strong>Valor contable + nueva aportación</strong></td><td class="num">317.565</td><td class="num">104.796</td><td>Valor de su 33% tras ampliar capital</td></tr>
+              <tr><td><strong>EBITDA ajustado × múltiplo 4,9x</strong></td><td class="num">~196.000</td><td class="num">~65.000</td><td>Múltiplo razonable para sector maduro</td></tr>
+              <tr><td><strong>Precio implícito pagado</strong></td><td class="num">363.636</td><td class="num">120.000</td><td>El precio implica valorar la empresa en 9× EBITDA ajustado</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-red mt-8"><strong>Conclusión de valoración:</strong> Pagar 120.000 USD por el 33% implica valorar la empresa en ~363.000 USD, lo que equivale a 9× el EBITDA ajustado. Para un sector maduro con presión de márgenes, este múltiplo es elevado. Solo se justifica si las expectativas de crecimiento (TLC, aranceles) se materializan.</div>
+
+        <div class="sub-label mt-32">Balance operativo</div>
+        <div class="sub-heading">Análisis de la estructura financiera</div>
+
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-value">141.240</div><div class="kpi-label">NOF</div><div class="kpi-sub">Necesidades operativas de fondos</div></div>
+          <div class="kpi-card"><div class="kpi-value" style="color:var(--red-accent);">17.115</div><div class="kpi-label">Fondo de Maniobra</div><div class="kpi-sub">Muy ajustado para las NOF</div></div>
+          <div class="kpi-card"><div class="kpi-value" style="color:var(--red-accent);">124.125</div><div class="kpi-label">NRN (déficit)</div><div class="kpi-sub">Necesidad de recursos negociados</div></div>
+          <div class="kpi-card"><div class="kpi-value">140.000</div><div class="kpi-label">Deuda a accionistas</div><div class="kpi-sub">Préstamo a corto plazo urgente</div></div>
+        </div>
+
+        <div class="callout callout-red"><strong>El problema de liquidez es real y urgente.</strong> La empresa tiene NOF de 141.240 USD y un FM de solo 17.115 USD. La brecha (124.125 USD) se cubre con el préstamo de 140.000 USD de los propios socios, que aparece como deuda a corto plazo. Sin la ampliación de capital de 120.000 USD, la empresa tiene un problema grave de tesorería.</div>
+
+        <div class="sub-label mt-32">Proyección año siguiente</div>
+        <div class="sub-heading">¿Qué podría ocurrir si mejora la gestión?</div>
+
+        <div class="comp-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Concepto</th><th class="num">Escenario base</th><th>Hipótesis</th></tr></thead>
+            <tbody>
+              <tr><td>Ventas estimadas</td><td class="num">1.950.000</td><td>Recuperación parcial (+34%) con pedidos en cartera</td></tr>
+              <tr><td>Margen bruto estimado</td><td class="num">375.795</td><td>Mismo ratio que 2007 (19,3%)</td></tr>
+              <tr><td>Costes fijos (base 2007)</td><td class="num">323.324</td><td>Sin mejoras de gestión</td></tr>
+              <tr><td>Beneficio sin ajustes</td><td class="num">52.471</td><td>Recuperación modesta</td></tr>
+              <tr><td>Si reducen gastos personales (–70%)</td><td class="num">+13.921</td><td>Ahorro en "Varios" y publicidad innecesaria</td></tr>
+              <tr class="total-row"><td><strong>Beneficio ajustado estimado</strong></td><td class="num"><strong>88.117</strong></td><td>Variable posible para Edgardo: ~13.218 USD</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /tab-financiero -->
+
+
+      <!-- ══ TAB 3: ALTERNATIVAS ══ -->
+      <div class="tab-pane" id="tab-alternativas">
+
+        <h2 class="section-title mt-0"><span class="step-num">5</span>Formulación y Valoración de Alternativas</h2>
+        <p class="section-intro"><span class="card-badge badge-espontanea">Formulación: espontánea</span>&nbsp;&nbsp;<span class="card-badge badge-rigurosa">Valoración: rigurosa</span></p>
+
+        <div class="reveal-block open">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Alternativa 1: Rechazar la oferta — quedarse en el trabajo actual</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col"><h4>Ventajas</h4><ul>
+                <li>Mantiene 120.000 USD de capital intacto</li>
+                <li>Seguridad económica con hijo recién nacido</li>
+                <li>Puede buscar otra oportunidad mejor estructurada</li>
+                <li>Sin deuda familiar comprometida</li>
+                <li>Tiempo para preparar mejor el salto empresarial</li>
+              </ul></div>
+              <div class="cons-col"><h4>Inconvenientes</h4><ul>
+                <li>Renuncia al sueño de 7 años de ser empresario</li>
+                <li>Puede no presentarse una oportunidad similar pronto</li>
+                <li>Pierde experiencia directiva completa</li>
+                <li>Relación personal con Andrés y Pedro puede tensionarse</li>
+              </ul></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Alternativa 2: Aceptar la oferta en las condiciones actuales</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col"><h4>Ventajas</h4><ul>
+                <li>Cumple el objetivo de 7 años: ser empresario</li>
+                <li>Salario superior al actual (3.300 vs. 3.000 USD)</li>
+                <li>Aportaría el perfil comercial que la empresa no tiene</li>
+                <li>Sector conocido, socios de confianza probada</li>
+                <li>Activo en instalaciones libre de hipoteca (137.300 USD)</li>
+              </ul></div>
+              <div class="cons-col"><h4>Inconvenientes</h4><ul>
+                <li>Precio elevado: 9× EBITDA ajustado</li>
+                <li>Toda la capacidad financiera comprometida</li>
+                <li>Deuda de 140.000 USD a corto plazo que hay que repagar</li>
+                <li>Socios con cultura poco orientada a rentabilidad</li>
+                <li>Sin posibilidad de ampliar capital futuro si fuera necesario</li>
+                <li>Sector con presión estructural permanente</li>
+              </ul></div>
+            </div>
+            <div class="callout callout-red mt-16"><strong>Riesgo clave:</strong> Si los socios no aceptan cambios en la gestión (control de costes, profesionalización comercial, eliminar gastos personales en la empresa), Edgardo queda como socio financiero minoritario sin capacidad real de transformación.</div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Alternativa 3: Negociar condiciones antes de entrar</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <p class="body-text">Edgardo podría condicionar su entrada a cambios concretos en la gestión:</p>
+            <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;">
+              <li>Precio ajustado a la baja (ej. 95.000–100.000 USD) para reflejar la pérdida de 2007 y la deuda</li>
+              <li>Compromiso escrito de eliminar gastos personales de la cuenta de la empresa</li>
+              <li>Implantación de sistema de costes por colección antes de cerrar el acuerdo</li>
+              <li>Acuerdo previo sobre política de precios mínimos y márgenes objetivo</li>
+              <li>Pacto de socios con cláusulas de salida en caso de desacuerdo estratégico</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Matriz -->
+        <div class="sub-label mt-32">Matriz de valoración</div>
+        <div class="comp-wrapper">
+          <table class="matrix-table">
+            <thead><tr><th style="min-width:160px">Criterio</th><th>Rechazar</th><th>Aceptar (tal cual)</th><th>Negociar condiciones</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Viabilidad financiera empresa</strong></td><td><span class="score-mid">N/A</span></td><td><span class="score-mid">Media (si mejora)</span></td><td><span class="score-high">Alta (con condiciones)</span></td></tr>
+              <tr><td><strong>Protección familiar</strong></td><td><span class="score-high">Máxima ✓</span></td><td><span class="score-low">Baja (capital agotado)</span></td><td><span class="score-mid">Media-alta</span></td></tr>
+              <tr><td><strong>Precio justo</strong></td><td><span class="score-high">N/A</span></td><td><span class="score-low">Caro (9× EBITDA)</span></td><td><span class="score-high">Justo si se negocia</span></td></tr>
+              <tr><td><strong>Compatibilidad socios</strong></td><td><span class="score-high">N/A</span></td><td><span class="score-low">Incierta</span></td><td><span class="score-mid">A verificar previamente</span></td></tr>
+              <tr><td><strong>Alineación personal</strong></td><td><span class="score-low">Nula</span></td><td><span class="score-high">Alta ✓</span></td><td><span class="score-high">Alta ✓</span></td></tr>
+              <tr><td><strong>Riesgo patrimonial</strong></td><td><span class="score-high">Nulo ✓</span></td><td><span class="score-low">Alto</span></td><td><span class="score-mid">Moderado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /tab-alternativas -->
+
+
+      <!-- ══ TAB 4: DECISIÓN ══ -->
+      <div class="tab-pane" id="tab-decision">
+
+        <h2 class="section-title mt-0"><span class="step-num" style="background:var(--green-accent);color:white;">↵</span>La Decisión</h2>
+        <p class="section-intro"><span class="card-badge badge-electiva">Conducta electiva</span></p>
+
+        <div class="reveal-block open">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Posición recomendada: No entrar en las condiciones actuales</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="decision-box">
+              <div class="decision-box-label">Decisión recomendada</div>
+              <div class="decision-box-main">No aceptar la oferta en sus condiciones actuales. Si hay voluntad real de cambio por parte de los socios, negociar un precio y unas condiciones de gobernanza diferentes.</div>
+              <div class="decision-box-rationale">La empresa tiene valor potencial, pero Edgardo estaría pagando un precio elevado por una empresa con pérdidas, deuda a corto plazo y una cultura organizativa que contradice la gestión profesional que necesita. Sin garantías de cambio, el riesgo es asumir toda la gestión sin poder transformarla realmente.</div>
+            </div>
+            <p class="body-text mt-24"><strong>Razonamiento:</strong></p>
+            <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;margin-bottom:16px;">
+              <li>La empresa no necesita 120.000 USD para crecer: los necesita para resolver un problema de liquidez generado por su propia gestión deficiente.</li>
+              <li>El EBITDA ajustado de 40.000 USD no justifica un precio de 363.000 USD para la totalidad de la empresa.</li>
+              <li>Edgardo no tiene capacidad de reinversión futura: si el negocio necesita más capital en 12-18 meses, no podrá aportarlo.</li>
+              <li>Los socios muestran señales preocupantes: rechazan contratos rentables por autonomía personal, mezclan gastos, no controlan márgenes.</li>
+              <li>Su perfil comercial es valioso, pero requiere socios que le dejen aplicarlo. Eso no está garantizado.</li>
+            </ul>
+            <div class="callout callout-gold"><strong>Si decide entrar:</strong> La condición mínima es un pacto de socios con cláusulas claras sobre: eliminación de gastos personales en la empresa, sistema de costes por colección, política de precios con margen mínimo garantizado, y mecanismo de salida si no hay acuerdo estratégico a los 18 meses.</div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Posición alternativa: Entrar con condiciones negociadas</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <p class="body-text">También es defendible aceptar si se negocian condiciones previas:</p>
+            <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;">
+              <li>La empresa tiene activos reales (instalaciones por 137.300 USD sin cargas) que respaldan la inversión.</li>
+              <li>Edgardo aporta exactamente lo que falta: capacidad comercial y de gestión.</li>
+              <li>Con ventas recuperadas y costes controlados, el negocio es viable y el variable del 15% puede ser significativo.</li>
+              <li>El sector tiene oportunidades reales en nichos premium y diseño diferencial, que son precisamente las fortalezas de Andrés y Pedro.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Lección metodológica del caso</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <p class="body-text">Este caso ilustra cómo los <strong>sesgos personales</strong> distorsionan la recogida de información:</p>
+            <table class="data-table">
+              <thead><tr><th>Afirmación</th><th>Tipo</th><th>Riesgo</th></tr></thead>
+              <tbody>
+                <tr><td>«Confío plenamente en Andrés y Pedro»</td><td>Opinión (sesgo de amistad)</td><td><span class="score-low">Alto</span></td></tr>
+                <tr><td>«El TLC con EE.UU. aumentará las ventas»</td><td>Opinión de los socios (interesada)</td><td><span class="score-low">Alto</span></td></tr>
+                <tr><td>La empresa tuvo pérdidas de 88.134 USD en 2007</td><td>Hecho (cuenta de resultados)</td><td><span class="score-high">Verificable</span></td></tr>
+                <tr><td>Deuda a corto plazo de 140.000 USD</td><td>Hecho (balance)</td><td><span class="score-high">Verificable</span></td></tr>
+                <tr><td>Gastos personales imputados a la empresa</td><td>Hecho reconocido por los propios socios</td><td><span class="score-high">Verificable</span></td></tr>
+                <tr><td>«Estamos en un momento interesante»</td><td>Opinión interesada de los vendedores</td><td><span class="score-low">Alto</span></td></tr>
+              </tbody>
+            </table>
+            <div class="callout callout-gold mt-16"><strong>La confianza personal no sustituye al análisis riguroso.</strong> El caso demuestra que incluso personas honestas pueden presentar su empresa de forma sesgada cuando tienen un interés en la operación.</div>
+          </div>
+        </div>
+
+      </div><!-- /tab-decision -->
+
+
+      <!-- ══ TAB 5: DATOS ══ -->
+      <div class="tab-pane" id="tab-datos">
+
+        <h2 class="section-title mt-0"><span class="step-num" style="background:var(--gold-pale);color:var(--navy);">≡</span>Datos de referencia del caso</h2>
+
+        <div class="reveal-block open">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Cuenta de Pérdidas y Ganancias 2007 (Anexo 3)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead><tr><th>Concepto</th><th class="num">USD</th><th>Nota</th></tr></thead>
+              <tbody>
+                <tr><td>Ventas brutas</td><td class="num">1.455.900</td><td>Caída vs. años anteriores (~2.500.000)</td></tr>
+                <tr><td>Descuentos y comisiones</td><td class="num">(235.500)</td><td>16% sobre ventas brutas</td></tr>
+                <tr><td><strong>Ventas netas</strong></td><td class="num"><strong>1.220.400</strong></td><td></td></tr>
+                <tr><td>Costes directos de producción</td><td class="num">(985.210)</td><td>Incluye MP, MO directa, suministros</td></tr>
+                <tr><td><strong>Beneficio directo producción</strong></td><td class="num"><strong>235.190</strong></td><td>Margen bruto: 19,3%</td></tr>
+                <tr><td>Sueldos Dirección</td><td class="num">(89.500)</td><td></td></tr>
+                <tr><td>Amortización</td><td class="num">(65.000)</td><td>No cash</td></tr>
+                <tr><td>Seguros de vida</td><td class="num">(25.000)</td><td>Beneficio personal socios — cuestionable</td></tr>
+                <tr><td>Publicidad, ferias y suscripciones</td><td class="num">(52.567)</td><td>Fuentes de captación de negocio</td></tr>
+                <tr><td>Intereses financieros</td><td class="num">(18.328)</td><td>No cash (deuda accionistas)</td></tr>
+                <tr><td>Varios (alimentos, combustibles)</td><td class="num">(19.876)</td><td>Gastos personales socios — cuestionable</td></tr>
+                <tr><td>Resto costes indirectos</td><td class="num">(53.053)</td><td></td></tr>
+                <tr class="total-row"><td><strong>Resultado del ejercicio</strong></td><td class="num"><strong>(88.134)</strong></td><td>Primera pérdida</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Balance a 31/12/2007 (Anexo 4)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="comp-wrapper">
+              <table class="data-table">
+                <thead><tr><th>Activo</th><th class="num">USD</th><th>Pasivo y Patrimonio</th><th class="num">USD</th></tr></thead>
+                <tbody>
+                  <tr><td>Caja y bancos</td><td class="num">15.875</td><td>Efectos a accionistas (C/P)</td><td class="num">140.000</td></tr>
+                  <tr><td>Deudores</td><td class="num">108.785</td><td>Proveedores</td><td class="num">0</td></tr>
+                  <tr><td>Trabajos en proceso</td><td class="num">32.455</td><td>Deuda L/P bancaria</td><td class="num">0</td></tr>
+                  <tr><td><strong>Total circulante</strong></td><td class="num"><strong>157.115</strong></td><td>Recursos propios</td><td class="num">200.000</td></tr>
+                  <tr><td>Inmovilizado neto</td><td class="num">180.450</td><td>Reservas</td><td class="num">85.699</td></tr>
+                  <tr><td></td><td></td><td>Resultado 2007</td><td class="num">(88.134)</td></tr>
+                  <tr class="total-row"><td><strong>Total Activo</strong></td><td class="num"><strong>337.565</strong></td><td><strong>Total Pasivo</strong></td><td class="num"><strong>337.565</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Costes directos — Pedido pantalones "El Greco" (Anexo 1)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead><tr><th>Concepto</th><th class="num">USD</th></tr></thead>
+              <tbody>
+                <tr><td>MO: 1.800 h × 6 USD/h</td><td class="num">10.800</td></tr>
+                <tr><td>Seguridad Social (13%)</td><td class="num">1.404</td></tr>
+                <tr><td>Telas</td><td class="num">15.200</td></tr>
+                <tr><td>Hilos, botones y elementos</td><td class="num">1.300</td></tr>
+                <tr class="total-row"><td><strong>Total costes directos (3.600 prendas)</strong></td><td class="num"><strong>28.704</strong></td></tr>
+                <tr><td>Oferta inicial</td><td class="num">72.000</td></tr>
+                <tr><td>Precio final aceptado</td><td class="num">65.000</td></tr>
+                <tr><td><strong>Margen sobre costes directos</strong></td><td class="num"><strong>36.296 (55,8%)</strong></td></tr>
+              </tbody>
+            </table>
+            <div class="callout callout-navy mt-16"><strong>Atención:</strong> El margen del 55,8% es sobre costes <em>directos</em> únicamente. No incluye costes indirectos (estructura, dirección, amortización, etc.). El margen real sería sustancialmente inferior.</div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Pedidos en proceso (Anexo 2)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead><tr><th>Artículos</th><th>Cliente</th><th class="num">Cantidad</th><th>F. inicio</th><th>F. entrega</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td>Vaqueros</td><td>Mayortextil</td><td class="num">12.000</td><td>25/11/07</td><td>04/01/08</td><td>Entregado</td></tr>
+                <tr><td>Pantalones</td><td>El Greco</td><td class="num">36.000</td><td>08/01/08</td><td>25/02/08</td><td>Entregado</td></tr>
+                <tr><td>Camisetas</td><td>Mayortextil</td><td class="num">15.000</td><td>22/01/08</td><td>08/03/08</td><td>En proceso</td></tr>
+                <tr><td>Baberos</td><td>Exportext</td><td class="num">1.200</td><td>28/01/08</td><td>19/02/08</td><td style="color:var(--red-accent);font-weight:600">Retrasado</td></tr>
+                <tr><td>Vaqueros</td><td>Ecuatext</td><td class="num">1.800</td><td>05/02/08</td><td>26/02/08</td><td>Entregado</td></tr>
+                <tr><td>Pantalones</td><td>Colmayor</td><td class="num">24.000</td><td>18/02/08</td><td>19/03/08</td><td>En proceso</td></tr>
+                <tr><td>Camisas</td><td>El Greco</td><td class="num">18.000</td><td>25/02/08</td><td>25/03/08</td><td>En proceso</td></tr>
+                <tr class="total-row"><td><strong>Total prendas en cartera</strong></td><td></td><td class="num"><strong>108.000</strong></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /tab-datos -->
+
+    </div><!-- /tabs-wrapper -->
+  </div><!-- /page-content -->
 </main>
+
 <script src="nav.js"></script>
 </body>
 </html>
