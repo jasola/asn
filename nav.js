@@ -12,7 +12,7 @@
   var CASOS = [
     { slug: 'caso-textiles-medellin',    title: 'Textiles Medell\u00edn',              ready: true  },
     { slug: 'caso-ricks-cafe',           title: "Rick\u2019s Cafe Americain",          ready: true  },
-    { slug: 'caso-alimentacion-gorki',   title: 'Alimentaci\u00f3n Gorki',             ready: false },
+    { slug: 'caso-alimentacion-gorki',   title: 'Alimentación Gorki',             ready: true },
     { slug: 'caso-programacion-avanzada',title: 'Servicios de Programaci\u00f3n',      ready: false },
   ];
 

@@ -5,11 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alimentación Gorki — Análisis de Situaciones de Negocio</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .case-hero { background:var(--navy); padding:52px 48px 44px; position:relative; overflow:hidden; border-bottom:3px solid var(--gold); }
+    .case-hero::after { content:'"'; position:absolute; right:48px; top:20px; font-family:var(--font-title); font-size:200px; color:rgba(201,168,76,0.06); line-height:1; pointer-events:none; }
+    .case-hero-inner { position:relative; z-index:1; max-width:680px; }
+    .case-hero-code { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .case-hero-code::before { content:''; display:inline-block; width:24px; height:1px; background:var(--gold); }
+    .case-hero h1 { font-family:var(--font-title); font-size:38px; font-weight:700; color:var(--white); line-height:1.2; margin-bottom:14px; }
+    .case-hero-quote { font-family:var(--font-body); font-size:15px; color:rgba(255,255,255,.55); font-style:italic; line-height:1.65; border-left:2px solid rgba(201,168,76,.4); padding-left:16px; margin-bottom:22px; }
+    .case-hero-meta { display:flex; flex-wrap:wrap; gap:12px; }
+    .meta-chip { font-family:var(--font-ui); font-size:11.5px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.7); padding:5px 12px; border-radius:20px; display:flex; align-items:center; gap:6px; }
+    .meta-chip strong { color:var(--gold-light); }
+    .sub-label { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+    .sub-heading { font-family:var(--font-title); font-size:20px; font-weight:600; color:var(--navy); margin-bottom:12px; }
+    .body-text { font-family:var(--font-body); font-size:15.5px; color:var(--ink-mid); line-height:1.75; margin-bottom:14px; }
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+    @media(max-width:650px){.info-grid{grid-template-columns:1fr}}
+    .info-item { background:var(--white); border:1px solid var(--border-light); border-radius:var(--radius); padding:16px 18px; }
+    .info-item-label { font-family:var(--font-ui); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-light); margin-bottom:5px; }
+    .info-item-value { font-family:var(--font-ui); font-size:14px; color:var(--ink); line-height:1.5; }
+    .comp-wrapper { overflow-x:auto; margin:16px 0; }
+    .matrix-table { width:100%; border-collapse:collapse; font-family:var(--font-ui); font-size:13px; }
+    .matrix-table th { background:var(--navy); color:var(--gold-light); padding:10px 14px; text-align:center; font-size:11.5px; font-weight:600; }
+    .matrix-table th:first-child { text-align:left; }
+    .matrix-table td { padding:9px 14px; border-bottom:1px solid var(--border-light); color:var(--ink-mid); vertical-align:top; }
+    .matrix-table td:not(:first-child) { text-align:center; }
+    .matrix-table tr:nth-child(even) td { background:#f8f6f1; }
+    .score-high { color:var(--green-accent); font-weight:700; }
+    .score-mid  { color:#8a6000; font-weight:600; }
+    .score-low  { color:var(--red-accent); font-weight:700; }
+    .pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:12px 0; }
+    .pros-col,.cons-col { border-radius:var(--radius); padding:18px 20px; }
+    .pros-col { background:#edf5f0; border:1px solid #8acc8a; }
+    .cons-col { background:#fdf0f2; border:1px solid #e8a0a8; }
+    .pros-col h4 { font-family:var(--font-ui); font-size:12px; font-weight:700; color:var(--green-accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
+    .cons-col h4 { font-family:var(--font-ui); font-size:12px; font-weight:700; color:var(--red-accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
+    .pros-col ul,.cons-col ul { list-style:none; font-family:var(--font-ui); font-size:13px; color:var(--ink); line-height:1.7; }
+    .pros-col ul li::before { content:"+ "; color:var(--green-accent); font-weight:700; }
+    .cons-col ul li::before { content:"- "; color:var(--red-accent); font-weight:700; }
+    .decision-box { background:var(--navy); border:2px solid var(--gold); border-radius:var(--radius-lg); padding:32px 36px; margin-top:28px; }
+    .decision-box-label { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+    .decision-box-main { font-family:var(--font-title); font-size:22px; font-weight:600; color:var(--white); line-height:1.35; margin-bottom:14px; }
+    .decision-box-rationale { font-family:var(--font-body); font-size:15px; color:rgba(255,255,255,.65); line-height:1.7; font-style:italic; }
+    /* Pizarra-style highlight boxes */
+    .pizarra-block { background:var(--navy); border-radius:var(--radius); padding:20px 24px; margin:16px 0; }
+    .pizarra-title { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+    .alt-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin:16px 0; }
+    .alt-card { border:1px solid var(--border-light); border-radius:var(--radius); padding:16px 18px; background:var(--white); }
+    .alt-card-title { font-family:var(--font-title); font-size:15px; font-weight:600; color:var(--navy); margin-bottom:6px; }
+    .alt-card-desc { font-family:var(--font-ui); font-size:12px; color:var(--ink-light); line-height:1.55; }
+    @media(max-width:650px){.pros-cons{grid-template-columns:1fr}}
+    /* Ratios table */
+    .ratio-good { color:var(--green-accent); font-weight:600; }
+    .ratio-bad  { color:var(--red-accent); font-weight:600; }
+    .ratio-mid  { color:#8a6000; font-weight:600; }
+  </style>
 </head>
 <body>
+
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <nav class="sidebar" id="sidebar"></nav>
+
 <main class="main">
+  <div class="case-hero">
+    <div class="case-hero-inner">
+      <div class="case-hero-code">Caso 03 — ASNI-9</div>
+      <h1>Alimentación Gorki, S.L.</h1>
+      <div class="case-hero-quote">
+        «Debemos decidir si nuestro crecimiento se basará en franquicias o no. Adicionalmente queremos implantar nuestra expansión en Andalucía en los próximos años. Debemos resolver este tema lo antes posible.»
+      </div>
+      <div class="case-hero-meta">
+        <span class="meta-chip"><strong>Protagonistas:</strong> Gonzalo Ramírez y Luis Higuera</span>
+        <span class="meta-chip"><strong>Lugar:</strong> Málaga / Andalucía / Madrid</span>
+        <span class="meta-chip"><strong>Fecha:</strong> Marzo 2008</span>
+        <span class="meta-chip"><strong>Sector:</strong> Restauración (4ª y 5ª gama)</span>
+        <span class="meta-chip"><strong>Decisión:</strong> Estrategia de crecimiento</span>
+      </div>
+    </div>
+  </div>
+
   <div class="topbar">
     <div class="topbar-breadcrumb">
       <a href="index.html" style="color:var(--ink-light);text-decoration:none;">Inicio</a>
@@ -17,21 +91,547 @@
       <span class="current">Alimentación Gorki</span>
     </div>
     <div class="topbar-meta">
+      <span class="topbar-tag">Estrategia</span>
+      <span class="topbar-tag">Expansión</span>
       <button class="menu-toggle" id="menuToggle">&#9776;</button>
     </div>
   </div>
+
   <div class="page-content">
-    <div class="page-header mt-32">
-      <span class="eyebrow">Caso 03</span>
-      <h1>Alimentación Gorki</h1>
-      <div class="gold-rule"></div>
-      <p class="subtitle">Este caso está en preparación. Estará disponible próximamente con el análisis completo aplicando el método científico de toma de decisiones.</p>
-    </div>
-    <div class="callout callout-navy">
-      <strong>En preparación.</strong> Cuando se incorpore el material, esta página incluirá: predefinición, recogida y clasificación de información, definición del problema, criterios de valoración, análisis de alternativas y decisión recomendada.
-    </div>
-  </div>
+    <div class="tabs-wrapper">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-metodo">Método aplicado</button>
+        <button class="tab-btn" data-tab="tab-empresa">La empresa</button>
+        <button class="tab-btn" data-tab="tab-alternativas">Alternativas</button>
+        <button class="tab-btn" data-tab="tab-decision">Decisión</button>
+        <button class="tab-btn" data-tab="tab-datos">Datos del caso</button>
+      </div>
+
+      <!-- ══ TAB 1: MÉTODO ══ -->
+      <div class="tab-pane active" id="tab-metodo">
+
+        <div class="case-section">
+          <h2 class="section-title mt-0"><span class="step-num">1</span>Predefinición (Hipótesis inicial)</h2>
+          <p class="section-intro"><span class="card-badge badge-espontanea">Postura espontánea</span></p>
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">¿Cuál es la hipótesis de partida?</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <p class="body-text">Gonzalo y Luis, fundadores al 50% de Alimentación Gorki, tienen 7 restaurantes funcionando (6 en Andalucía, 1 en Madrid) y quieren crecer. La pregunta que se hacen es aparentemente simple: <em>¿cuántos restaurantes más abrir, dónde, a qué velocidad y con qué modelo?</em></p>
+              <p class="body-text">Pero la hipótesis de partida más precisa es: <em>"Gorki tiene un modelo de negocio diferenciado y probado que puede escalarse. La clave es decidir el vehículo de crecimiento correcto para cada mercado."</em></p>
+              <div class="callout callout-gold"><strong>Atención al diagnóstico sintomático:</strong> La decisión no es solo "¿con franquicia o sin ella?" sino algo más profundo: <em>¿están Gonzalo y Luis preparados para dedicar el tiempo y la estructura directiva que requiere el crecimiento que contemplan?</em> Ellos mismos reconocen que posiblemente el crecimiento les exigirá dedicar más tiempo al negocio.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-section">
+          <h2 class="section-title"><span class="step-num">2</span>Recogida y Clasificación de Información</h2>
+          <p class="section-intro"><span class="card-badge badge-espontanea">Recogida: espontánea</span>&nbsp;&nbsp;<span class="card-badge badge-rigurosa">Clasificación: rigurosa</span></p>
+
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">A. El modelo de negocio Gorki: qué hacen bien</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item"><div class="info-item-label">Concepto diferencial</div><div class="info-item-value">Restaurante de <strong>4ª y 5ª gama</strong>: sin cocina tradicional, sin salida de humos. Productos recibidos precocinados, ensamblados y personalizados en local.</div></div>
+                <div class="info-item"><div class="info-item-label">Posicionamiento</div><div class="info-item-value">Clase alta y media-alta. Carta de tapas y platos para compartir. Satisface jóvenes, familias, empresarios y ejecutivos.</div></div>
+                <div class="info-item"><div class="info-item-label">Inversión por local</div><div class="info-item-value">~250.000 € incluyendo inventario. Periodo de recuperación medio: 3,5 años.</div></div>
+                <div class="info-item"><div class="info-item-label">Proveedores</div><div class="info-item-value">Muy concentrados, todos en Málaga. Precios negociados anualmente. Antonio de Miguel (60% alimentos), Berlys (pan), Distribuciones Ordóñez (vinos). Rápeles van a Gorki, no al franquiciado.</div></div>
+                <div class="info-item"><div class="info-item-label">Control financiero</div><div class="info-item-value">Sin crédito a clientes. Control de materias primas: raciones en vacío al recibir. Margen bruto mejorando año a año.</div></div>
+                <div class="info-item"><div class="info-item-label">Calidad de servicio</div><div class="info-item-value">75% de clientes considera calidad-precio buena o muy buena. Mystery shoppers 3 veces al año.</div></div>
+              </div>
+              <div class="callout callout-navy mt-16"><strong>Ventaja operativa clave:</strong> El modelo de 4ª-5ª gama implica locales más pequeños, cocinas de 12-15 m², sin licencias de humos, menor coste de apertura y menor complejidad de gestión operativa. Esto lo hace más replicable que un restaurante tradicional.</div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">B. Los decisores: Gonzalo y Luis</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item"><div class="info-item-label">Gonzalo Ramírez</div><div class="info-item-value">Empresario agrícola. Catering propio. Hotel en Teba. Negocia los proveedores. Experiencia en hostelería. <strong>No dedicación exclusiva.</strong></div></div>
+                <div class="info-item"><div class="info-item-label">Luis Higuera</div><div class="info-item-value">Economista. Asesor de empresas. Fue quien impulsó la expansión desde 1996. <strong>No dedicación exclusiva.</strong></div></div>
+                <div class="info-item"><div class="info-item-label">Estructura directiva actual</div><div class="info-item-value">Dirección + Supervisión General de Restaurantes + Administración. El encargado de cada local es el eslabón clave: de su selección depende el éxito o fracaso del local.</div></div>
+                <div class="info-item"><div class="info-item-label">Bottleneck evidente</div><div class="info-item-value">Con 7 restaurantes ya sin dedicación exclusiva. Plan: 10-12 nuevos en Madrid solos en 5 años. La estructura directiva actual no escala sin cambios.</div></div>
+              </div>
+              <div class="callout callout-red mt-8"><strong>Señal de alerta:</strong> Los 3 restaurantes que han cerrado (Fuengirola, Paseo de los Tilos, Antequera) tuvieron como factor común problemas de gestión local, expectativas erróneas sobre la zona, y costes fijos no controlados. Crecer sin resolver esto primero replica el error.</div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">C. El contexto 2008: diferencias Madrid vs. Andalucía</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="comp-wrapper">
+                <table class="data-table">
+                  <thead><tr><th>Variable</th><th>Andalucía</th><th>Madrid</th></tr></thead>
+                  <tbody>
+                    <tr><td>Comportamiento del cliente</td><td>No reserva. Va a tapear. Informal.</td><td>Reserva habitual. Más formal.</td></tr>
+                    <tr><td>Rotación de mesas</td><td>6-7 veces/día</td><td>~3 veces/día</td></tr>
+                    <tr><td>Mejor momento</td><td>Noches (más consumo y tiempo)</td><td>Mediodía entre semana (negocios)</td></tr>
+                    <tr><td>Tipo de consumo dominante</td><td>Familiar, tapas para compartir</td><td>Negocios (ticket más alto)</td></tr>
+                    <tr><td>Precios</td><td>Base</td><td>+8-10% sobre Andalucía</td></tr>
+                    <tr><td>Alquiler zonas prime</td><td>Asumible</td><td>Muy alto en zonas buenas (zona M-30)</td></tr>
+                    <tr><td>Extrarradio Madrid</td><td>N/A</td><td>Clientes con hipotecas altas, poca liquidez</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="callout callout-gold mt-8">Madrid tiene más ticket por mesa (negocios) pero menos rotaciones. Andalucía tiene más rotaciones pero ticket más bajo. El modelo Gorki funciona en ambos, pero la estrategia de expansión debería ser diferente en cada mercado.</div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">D. Lecciones aprendidas de los fracasos y éxitos</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <p class="body-text">El caso documenta 3 cierres y varios éxitos. El patrón es revelador:</p>
+              <table class="data-table">
+                <thead><tr><th>Local</th><th>Resultado</th><th>Causa principal</th></tr></thead>
+                <tbody>
+                  <tr><td>Fuengirola</td><td style="color:var(--red-accent)">Cierre</td><td>Mala selección del encargado. Servicio inadecuado.</td></tr>
+                  <tr><td>Paseo de los Tilos (Málaga)</td><td style="color:var(--red-accent)">Cierre</td><td>Expectativas erróneas sobre desarrollo de zona. Coste alquiler excesivo.</td></tr>
+                  <tr><td>Antequera</td><td style="color:var(--red-accent)">Cierre</td><td>Mercado insuficiente (L-J sin salidas). Costes fijos altos (mín. 5 personas).</td></tr>
+                  <tr><td>Marbella (ampliación)</td><td style="color:var(--green-accent)">Éxito</td><td>Se quedó pequeño. Decisión de ampliar acertada.</td></tr>
+                  <tr><td>Sevilla, Córdoba</td><td style="color:var(--green-accent)">Éxito</td><td>Socios locales con red de relaciones y gestión local.</td></tr>
+                  <tr><td>Madrid (Maldonado)</td><td style="color:var(--green-accent)">Éxito inicial</td><td>Zona exclusiva. Socio gestor implicado.</td></tr>
+                  <tr><td>Larios (Málaga)</td><td style="color:var(--ratio-bad)">Problemas</td><td>Mystery shopper: NUNCA saluda al cliente, NUNCA comprueba satisfacción.</td></tr>
+                </tbody>
+              </table>
+              <div class="callout callout-navy mt-16"><strong>Patrón de éxito:</strong> los locales que funcionan bien tienen socios locales implicados o encargados bien seleccionados. <strong>Patrón de fracaso:</strong> expectativas de zona erróneas + encargado inadecuado + estructura de costes fijos que no aguanta baja demanda.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-section">
+          <h2 class="section-title"><span class="step-num">3</span>Definición del Problema</h2>
+          <p class="section-intro"><span class="card-badge badge-rigurosa">Postura rigurosa</span></p>
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">¿Cuál es el verdadero problema?</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <div class="callout callout-navy"><strong>Problema bien definido:</strong> Gorki tiene un modelo diferenciado y probado con resultados financieros mejorando. El problema no es si crecer (pueden), sino <em>cómo hacerlo sin perder el control de calidad y sin superar la capacidad directiva de dos fundadores que no tienen dedicación exclusiva</em>. El riesgo no es el modelo de negocio: es la estructura de gobierno que hay detrás de él.</div>
+              <p class="body-text mt-16"><strong>Sub-problemas:</strong></p>
+              <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;margin-bottom:12px;">
+                <li>¿Qué modelo de expansión (propio / socios / franquicia) preserva mejor el concepto Gorki?</li>
+                <li>¿A qué velocidad crecer sin dejar de controlar la calidad del servicio?</li>
+                <li>¿Qué perfil de socio/franquiciado se necesita y cómo asegurar que los encargados sean los adecuados?</li>
+                <li>¿Cuándo y cómo deben Gonzalo y Luis aumentar su dedicación al negocio?</li>
+                <li>¿Tiene sentido la internacionalización antes de consolidar España?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-section">
+          <h2 class="section-title"><span class="step-num">4</span>Criterios de Valoración</h2>
+          <p class="section-intro"><span class="card-badge badge-rigurosa">Postura rigurosa</span></p>
+          <div class="reveal-block open">
+            <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">¿Con qué criterios evaluar las alternativas de crecimiento?</span></div><span class="reveal-icon">▼</span></div>
+            <div class="reveal-body">
+              <p class="body-text" style="font-size:13px;color:var(--ink-light);font-family:var(--font-ui);margin-bottom:12px;"><em>Extraídos de la pizarra de criterios fundamentales de la sesión de clase:</em></p>
+              <table class="data-table">
+                <thead><tr><th>Criterio</th><th>Descripción</th><th>Peso</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Riesgo financiero</strong></td><td>¿Cuánto capital propio se pone en riesgo? ¿Hay apalancamiento excesivo?</td><td style="text-align:center">★★★★★</td></tr>
+                  <tr><td><strong>Experiencia requerida</strong></td><td>¿El modelo exige gestión que Gorki no tiene o no quiere hacer?</td><td style="text-align:center">★★★★★</td></tr>
+                  <tr><td><strong>Todo o nada</strong></td><td>¿Es reversible la decisión si no funciona?</td><td style="text-align:center">★★★★☆</td></tr>
+                  <tr><td><strong>Dedicación de tiempo</strong></td><td>¿Cuánto tiempo directo exige a Gonzalo y Luis?</td><td style="text-align:center">★★★★☆</td></tr>
+                  <tr><td><strong>Control (marca y proveedores)</strong></td><td>¿Mantiene Gorki el control sobre calidad, carta, proveedores y precios?</td><td style="text-align:center">★★★★☆</td></tr>
+                  <tr><td><strong>Relación con socios</strong></td><td>¿Qué perfil de socio necesita cada modelo y cómo se gestiona el conflicto?</td><td style="text-align:center">★★★☆☆</td></tr>
+                  <tr><td><strong>Capacidad de ellos</strong></td><td>¿Pueden Gonzalo y Luis realmente dedicar más tiempo si el negocio lo exige?</td><td style="text-align:center">★★★☆☆</td></tr>
+                  <tr><td><strong>Organización general</strong></td><td>¿La estructura actual soporta el crecimiento proyectado?</td><td style="text-align:center">★★★☆☆</td></tr>
+                  <tr><td><strong>Recursos</strong></td><td>¿Hay capital suficiente para el ritmo de apertura previsto?</td><td style="text-align:center">★★★☆☆</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-metodo -->
+
+
+      <!-- ══ TAB 2: LA EMPRESA ══ -->
+      <div class="tab-pane" id="tab-empresa">
+
+        <h2 class="section-title mt-0"><span class="step-num" style="background:var(--gold-pale);color:var(--navy);">G</span>Gorki: el modelo de negocio</h2>
+
+        <div class="sub-label">Historia y evolución</div>
+        <div class="sub-heading">De tienda de delicatessen a cadena de restaurantes</div>
+
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-value">1992</div><div class="kpi-label">Apertura 1er local</div><div class="kpi-sub">Calle Strachan, Málaga. 48 m², 2 empleados</div></div>
+          <div class="kpi-card"><div class="kpi-value">7</div><div class="kpi-label">Restaurantes en 2008</div><div class="kpi-sub">6 Andalucía + 1 Madrid</div></div>
+          <div class="kpi-card"><div class="kpi-value">250k€</div><div class="kpi-label">Inversión por local</div><div class="kpi-sub">Periodo recuperación: 3,5 años</div></div>
+          <div class="kpi-card"><div class="kpi-value">3,5 años</div><div class="kpi-label">Payback medio</div><div class="kpi-sub">Gonzalo: "3 años para ver viabilidad real"</div></div>
+        </div>
+
+        <div class="sub-label mt-24">Fortalezas del modelo</div>
+        <div class="info-grid">
+          <div class="info-item"><div class="info-item-label">Modelo operativo</div><div class="info-item-value">4ª y 5ª gama: sin cocina tradicional, sin humos, cocina de 12-15 m². Más espacio para comensales, menos licencias, menos conflictos de vecindad.</div></div>
+          <div class="info-item"><div class="info-item-label">Gestión de proveedores</div><div class="info-item-value">Todos en Málaga. Negociación anual de precios. Concentración deliberada. Rápeles para Gorki (poder de negociación centralizado).</div></div>
+          <div class="info-item"><div class="info-item-label">Gestión financiera</div><div class="info-item-value">Sin crédito a clientes (cobro al momento). Raciones individuales en vacío = cero merma. Margen bruto en crecimiento los tres últimos años.</div></div>
+          <div class="info-item"><div class="info-item-label">Personal</div><div class="info-item-value">Salarios por encima del convenio. Remuneración variable por facturación y objetivos. Premio a los 10 años en la empresa.</div></div>
+          <div class="info-item"><div class="info-item-label">Mystery shoppers</div><div class="info-item-value">Control externo 3 veces/año. 75% clientes valoran calidad-precio como buena o muy buena. El 100% recomendaría el establecimiento.</div></div>
+          <div class="info-item"><div class="info-item-label">Carta única</div><div class="info-item-value">Misma carta en todos los locales. Precios +8-10% en Madrid y Palma. Uniformidad del concepto garantizada.</div></div>
+        </div>
+
+        <div class="sub-label mt-24">Debilidades y riesgos actuales</div>
+        <div class="callout callout-red">
+          <strong>El cuello de botella es la dirección.</strong> Gonzalo y Luis no tienen dedicación exclusiva. Con 7 restaurantes ya, plantean abrir 10-12 más en Madrid en 5 años. La estructura directiva no escala sin cambios profundos.
+        </div>
+        <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;margin-top:12px;margin-bottom:16px;">
+          <li>El <strong>encargado es el eslabón crítico</strong>: cuando falla (Fuengirola), el local cierra. No hay un sistema robusto de selección y formación de encargados a escala.</li>
+          <li>Larios (Málaga) tiene resultados de mystery shopper preocupantes: <strong>NUNCA</strong> saluda al cliente, <strong>NUNCA</strong> comprueba satisfacción durante la comida.</li>
+          <li>Córdoba Tabanco: <strong>NUNCA</strong> ofrece bebida adicional, <strong>NUNCA</strong> comprueba satisfacción. Con los socios solo como inversores (sin implicación), el control es débil.</li>
+          <li>La master-franquicia de Madrid (Capicoba) se gestiona desde Málaga: distancia que añade complejidad.</li>
+          <li>El plan de expansión prevé apertura fuera de España: internacionalizar antes de consolidar España es <strong>prematuro</strong> con la estructura actual.</li>
+        </ul>
+
+        <div class="sub-label mt-24">Resultados financieros grupo 2005-2007</div>
+        <div class="comp-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Entidad</th><th class="num">Resultado 2005</th><th class="num">Resultado 2006</th><th class="num">Resultado 2007</th><th>Tendencia</th></tr></thead>
+            <tbody>
+              <tr><td>Alimentación Gorki (matriz)</td><td class="num">41.941</td><td class="num">36.039</td><td class="num">87.847</td><td><span class="ratio-good">↑ Fuerte mejora</span></td></tr>
+              <tr><td>Pony Pisador (Sevilla)</td><td class="num">18.714</td><td class="num">11.136</td><td class="num">21.421</td><td><span class="ratio-mid">↔ Estable</span></td></tr>
+              <tr><td>Capicoba (Madrid)</td><td class="num">—</td><td class="num">(3.480)</td><td class="num">(36.078)</td><td><span class="ratio-bad">↓ Pérdidas crecientes</span></td></tr>
+              <tr><td>Tabanco (Córdoba)</td><td class="num">4.435</td><td class="num">8.742</td><td class="num">7.165</td><td><span class="ratio-mid">↔ Modesto</span></td></tr>
+              <tr><td>Gormarki (holding)</td><td class="num">24.272</td><td class="num">39.199</td><td class="num">79.557</td><td><span class="ratio-good">↑ Fuerte mejora</span></td></tr>
+              <tr><td>Ruedalabola (La Barra)</td><td class="num">(3.145)</td><td class="num">8.883</td><td class="num">36.883</td><td><span class="ratio-good">↑ Muy buena mejora</span></td></tr>
+              <tr class="total-row"><td><strong>TOTAL GRUPO</strong></td><td class="num"><strong>86.217</strong></td><td class="num"><strong>100.518</strong></td><td class="num"><strong>196.795</strong></td><td><span class="ratio-good">↑↑ Excelente</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout callout-gold mt-8"><strong>Madrid (Capicoba) genera pérdidas crecientes</strong> en sus primeros dos años. Gonzalo dice que hay que esperar 3 años para ver la viabilidad real. Esto es coherente con el modelo, pero implica que el plan de 10-12 restaurantes en Madrid necesita capital para absorber pérdidas iniciales en todos ellos.</div>
+
+        <div class="sub-label mt-24">Ratios clave 2007</div>
+        <div class="comp-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Ratio</th><th>Alim. Gorki</th><th>Pony Pisador</th><th>Tabanco</th><th>Gormarki</th><th>Ruedalabola</th></tr></thead>
+            <tbody>
+              <tr><td>Rentabilidad/Ventas %</td><td class="num"><span class="ratio-good">4%</span></td><td class="num">4%</td><td class="num">2%</td><td class="num">138%*</td><td class="num">7%</td></tr>
+              <tr><td>Rentabilidad/RRPP %</td><td class="num"><span class="ratio-good">32%</span></td><td class="num">35%</td><td class="num">21%</td><td class="num">55%</td><td class="num">39%</td></tr>
+              <tr><td>Cash flow (€)</td><td class="num">84.774</td><td class="num">48.930</td><td class="num">29.164</td><td class="num">116.916</td><td class="num">83.591</td></tr>
+              <tr><td>Gastos financieros/Ventas %</td><td class="num">0,82%</td><td class="num">0,79%</td><td class="num">0,75%</td><td class="num">31%*</td><td class="num">0,52%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:11.5px;color:var(--ink-light);font-family:var(--font-ui);margin-top:6px;">* Gormarki es holding patrimonial; sus ratios no son comparables operativamente.</p>
+
+      </div><!-- /tab-empresa -->
+
+
+      <!-- ══ TAB 3: ALTERNATIVAS ══ -->
+      <div class="tab-pane" id="tab-alternativas">
+
+        <h2 class="section-title mt-0"><span class="step-num">5</span>Formulación y Valoración de Alternativas</h2>
+        <p class="section-intro"><span class="card-badge badge-espontanea">Formulación: espontánea</span>&nbsp;&nbsp;<span class="card-badge badge-rigurosa">Valoración: rigurosa</span></p>
+
+        <div class="callout callout-navy">
+          <strong>De la pizarra de clase:</strong> La pregunta central es <em>¿Cómo crecer?</em>, con estas dimensiones: locales, 2 socios, franquicia, ubicación, velocidad, estructura/organización.
+        </div>
+
+        <div class="sub-label mt-20">Alternativas identificadas</div>
+        <div class="alt-grid">
+          <div class="alt-card"><div class="alt-card-title">1. Solo + Socios</div><div class="alt-card-desc">Gorki abre directamente con socios locales minoritarios, como hizo en Sevilla y Córdoba.</div></div>
+          <div class="alt-card"><div class="alt-card-title">2. Franquicia + Socios</div><div class="alt-card-desc">Modelo mixto: franquicia pura combinada con socios locales implicados.</div></div>
+          <div class="alt-card"><div class="alt-card-title">3. Franquicia resto lugares</div><div class="alt-card-desc">Franquicia pura para mercados nuevos (resto Andalucía, Barcelona, Valencia).</div></div>
+          <div class="alt-card"><div class="alt-card-title">4. Solo (solos, -2)</div><div class="alt-card-desc">Gorki abre y gestiona directamente todos los nuevos locales sin socios externos.</div></div>
+          <div class="alt-card"><div class="alt-card-title">5. Solo + Franquicia</div><div class="alt-card-desc">Combinación: locales propios en zonas prime (Madrid dentro M-30) + franquicias en extrarradio y otras ciudades.</div></div>
+        </div>
+
+        <div class="reveal-block open">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Opción 1: Expansión con socios locales (modelo Sevilla/Córdoba)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col"><h4>Ventajas</h4><ul>
+                <li>Socios aportan red de relaciones locales (probado en Sevilla y Madrid)</li>
+                <li>Compromiso de los socios con el negocio cuando son gestores, no solo inversores</li>
+                <li>Capital compartido: menor riesgo financiero por local para Gorki</li>
+                <li>Gorki mantiene mayoría (65-70%) y control de la marca y proveedores</li>
+                <li>El socio gestor actúa como "encargado ejecutivo" con piel en el juego</li>
+              </ul></div>
+              <div class="cons-col"><h4>Inconvenientes</h4><ul>
+                <li>Difícil encontrar el perfil de socio correcto (inversores puros no funcionan bien, ver Córdoba)</li>
+                <li>Conflictos potenciales en decisiones estratégicas (precio, carta, proveedores)</li>
+                <li>Gestión de múltiples relaciones societarias compleja</li>
+                <li>Crecimiento más lento: hay que encontrar socios adecuados</li>
+              </ul></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Opción 2: Franquicia pura</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col"><h4>Ventajas</h4><ul>
+                <li>Crecimiento más rápido con menor capital propio comprometido</li>
+                <li>Canon inicial (30-35k€) y royalty (4-5% año 2+) generan ingresos recurrentes</li>
+                <li>Gorki controla proveedores (rápeles propios), carta y formación</li>
+                <li>Menor dedicación directiva por local</li>
+                <li>Permite expansión geográfica amplia sin estructura propia en cada ciudad</li>
+              </ul></div>
+              <div class="cons-col"><h4>Inconvenientes</h4><ul>
+                <li>Menor control sobre la calidad del servicio diario (el riesgo de marca es real)</li>
+                <li>El franquiciado prioriza su rentabilidad, no la imagen Gorki</li>
+                <li>Requiere sistema de control robusto (mystery shoppers solo 3 veces/año puede ser insuficiente)</li>
+                <li>Gorki necesita estructura de soporte a franquiciados que hoy no tiene</li>
+                <li>Experiencia aún limitada: solo 3 franquicias activas</li>
+              </ul></div>
+            </div>
+            <div class="callout callout-red mt-8"><strong>Riesgo crítico de marca:</strong> El caso ya documenta locales propios con "NUNCA" en estándares básicos de servicio. Con franquicias el control es aún más difícil. Sin sistema de supervisión robusto, la franquicia puede dañar la marca.</div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Opción 3: Crecimiento propio directo (solos)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="pros-cons">
+              <div class="pros-col"><h4>Ventajas</h4><ul>
+                <li>Control total de la calidad y el concepto</li>
+                <li>Todos los beneficios para Gorki</li>
+                <li>Sin conflictos con socios ni franquiciados</li>
+                <li>Mayor coherencia de marca</li>
+              </ul></div>
+              <div class="cons-col"><h4>Inconvenientes</h4><ul>
+                <li>250k€ por local: para 10-12 nuevos en Madrid = 2,5-3M€ de inversión</li>
+                <li>Sin socios locales que aporten relaciones y conocimiento del mercado</li>
+                <li>Gonzalo y Luis necesitarían dedicación exclusiva inmediata</li>
+                <li>Sin red de relaciones en ciudades nuevas (Valencia, Barcelona)</li>
+                <li>Los fracasos pasados (Fuengirola, Antequera) fueron con gestión propia</li>
+              </ul></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matriz valoración desde pizarra -->
+        <div class="sub-label mt-28">Matriz de valoración (de la pizarra de clase)</div>
+        <div class="comp-wrapper">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th style="min-width:180px">Criterio</th>
+                <th>Con socios<br><small>(modelo Sevilla)</small></th>
+                <th>Franquicia<br><small>(pura)</small></th>
+                <th>Solo<br><small>(directo)</small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Riesgo financiero</strong></td><td><span class="score-high">Bajo ✓</span><br><small>Capital compartido</small></td><td><span class="score-high">Bajo ✓</span><br><small>Canon + royalty</small></td><td><span class="score-low">Alto</span><br><small>250k€/local propio</small></td></tr>
+              <tr><td><strong>Experiencia requerida</strong></td><td><span class="score-high">Media ✓</span><br><small>Socio gestiona</small></td><td><span class="score-mid">Media-alta</span><br><small>Necesita soporte franquicia</small></td><td><span class="score-low">Alta</span><br><small>Gestión directa total</small></td></tr>
+              <tr><td><strong>Reversibilidad</strong></td><td><span class="score-mid">Media</span><br><small>Contratos sociedad</small></td><td><span class="score-high">Alta ✓</span><br><small>Contrato rescindible</small></td><td><span class="score-low">Baja</span><br><small>Inversión fija comprometida</small></td></tr>
+              <tr><td><strong>Dedicación tiempo directores</strong></td><td><span class="score-high">Baja-Media ✓</span><br><small>Socio gestiona día a día</small></td><td><span class="score-mid">Media</span><br><small>Control y soporte</small></td><td><span class="score-low">Alta</span><br><small>Dedicación exclusiva</small></td></tr>
+              <tr><td><strong>Control marca y proveedores</strong></td><td><span class="score-high">Alto ✓</span><br><small>Gorki mayoritario</small></td><td><span class="score-mid">Medio</span><br><small>Contratos + supervisión</small></td><td><span class="score-high">Total ✓</span></td></tr>
+              <tr><td><strong>Perfil de socios</strong></td><td><span class="score-mid">Crítico</span><br><small>Gestor + inversor, no solo inversor</small></td><td><span class="score-mid">Moderado</span><br><small>Inversor con recursos</small></td><td><span class="score-high">N/A ✓</span></td></tr>
+              <tr><td><strong>Capacidad de escalar</strong></td><td><span class="score-mid">Media</span><br><small>Depende de encontrar socios</small></td><td><span class="score-high">Alta ✓</span><br><small>Modelo escalable</small></td><td><span class="score-low">Baja</span><br><small>Limitada por capital y tiempo</small></td></tr>
+              <tr><td><strong>Organización necesaria</strong></td><td><span class="score-high">Menor ✓</span></td><td><span class="score-low">Mayor</span><br><small>Central de soporte franquicias</small></td><td><span class="score-low">Mayor</span><br><small>Dirección dedicada</small></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /tab-alternativas -->
+
+
+      <!-- ══ TAB 4: DECISIÓN ══ -->
+      <div class="tab-pane" id="tab-decision">
+
+        <h2 class="section-title mt-0"><span class="step-num" style="background:var(--green-accent);color:white;">↵</span>La Decisión</h2>
+        <p class="section-intro"><span class="card-badge badge-electiva">Conducta electiva</span></p>
+
+        <div class="reveal-block open">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Posición recomendada: Modelo mixto con socios, crecimiento gradual y orgánico</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="decision-box">
+              <div class="decision-box-label">Decisión recomendada</div>
+              <div class="decision-box-main">Crecer con socios locales implicados (no inversores puros) para los nuevos mercados, combinado con franquicias selectivas en zonas ya validadas (extrarradio Madrid), a velocidad moderada que no supere la capacidad directiva actual.</div>
+              <div class="decision-box-rationale">El modelo de socios gestores ha demostrado funcionar (Sevilla, Madrid). La franquicia pura a gran escala requiere una estructura de soporte que Gorki aún no tiene. Crecer solos a la velocidad planteada (10-12 Madrid en 5 años) exige dedicación exclusiva de ambos fundadores y una inversión de capital que no está acreditada en el caso.</div>
+            </div>
+
+            <p class="body-text mt-24"><strong>Plan de acción recomendado:</strong></p>
+            <ul style="font-family:var(--font-ui);font-size:14px;color:var(--ink-mid);line-height:2;padding-left:20px;margin-bottom:16px;">
+              <li><strong>Inmediato:</strong> Resolver el problema de Capicoba (Madrid). Está generando pérdidas crecientes y es la base del crecimiento madrileño. Entender si el problema es la zona, el modelo o la gestión.</li>
+              <li><strong>A 12 meses:</strong> Profesionalizar la gestión del grupo. Al menos uno de los dos fundadores debería aumentar su dedicación. Crear un sistema de selección y formación de encargados robusto.</li>
+              <li><strong>Crecer en Andalucía primero</strong> antes de escalar Madrid/Barcelona/Valencia. Es el mercado conocido, las relaciones son más fáciles, y los costes de fracaso son menores.</li>
+              <li><strong>Franquicia selectiva:</strong> Solo en zonas ya validadas (extrarradio Madrid, otras capitales andaluzas), con franquiciados con perfil de socio-gestor, no inversores financieros.</li>
+              <li><strong>No internacionalizar</strong> hasta consolidar la estructura en España. Es prematuro con la organización actual.</li>
+            </ul>
+
+            <div class="callout callout-gold"><strong>¿Cuántos y a qué velocidad?</strong> La limitante no es el dinero ni el concepto: es la capacidad directiva. 2-3 aperturas por año es un ritmo sostenible con la estructura actual. 10-12 en Madrid en 5 años (2-3 por año solo en esa ciudad) supera holgadamente esa capacidad.</div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">¿Qué NO deben hacer? (de la pizarra de clase)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="callout callout-red">
+              <strong>Internacionalizar antes de tiempo.</strong> Sin una estructura directiva sólida en España, abrir fuera del país multiplica la complejidad sin añadir valor. Las oportunidades en España aún no están agotadas.
+            </div>
+            <div class="callout callout-red mt-8">
+              <strong>Crecer con socios solo como inversores (sin gestión).</strong> Córdoba Tabanco (socios solo inversores) tiene los peores resultados de mystery shopper. El socio que no gestiona no controla la calidad del servicio.
+            </div>
+            <div class="callout callout-red mt-8">
+              <strong>Crecer a un ritmo que supere la capacidad de control.</strong> El concepto Gorki es replicable, pero su valor está en la consistencia del servicio. Si el crecimiento es más rápido que la capacidad de supervisión, la marca se deteriora.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Lección metodológica del caso</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <p class="body-text">Este caso ilustra la importancia de <strong>definir bien el problema</strong> antes de formular alternativas. La pregunta superficial ("¿franquicia o no?") esconde el problema real: la estructura directiva.</p>
+            <table class="data-table">
+              <thead><tr><th>Afirmación</th><th>Tipo</th><th>Implicación</th></tr></thead>
+              <tbody>
+                <tr><td>«El margen bruto mejora cada año»</td><td>Hecho (cuentas anuales)</td><td><span class="score-high">Favorable</span></td></tr>
+                <tr><td>«10-12 restaurantes en Madrid en 5 años»</td><td>Opinión de los socios (sin análisis de capacidad directiva)</td><td><span class="score-low">Cuestionable</span></td></tr>
+                <tr><td>Capicoba (Madrid) pierde dinero y va a peor</td><td>Hecho (PyG 2006-2007)</td><td><span class="score-low">Señal de alerta</span></td></tr>
+                <tr><td>Larios y Córdoba con "NUNCA" en servicio básico</td><td>Hecho (mystery shoppers)</td><td><span class="score-low">Problema de control ya existente</span></td></tr>
+                <tr><td>«El modelo Gorki es diferenciado y funciona»</td><td>Hecho (15 años, 7 locales rentables netos)</td><td><span class="score-high">Base sólida</span></td></tr>
+                <tr><td>«Posiblemente el crecimiento les exigirá más tiempo»</td><td>Opinión de los propios fundadores</td><td><span class="score-mid">Reconocimiento del problema</span></td></tr>
+              </tbody>
+            </table>
+            <div class="callout callout-gold mt-16"><strong>La pregunta decisiva que el método obliga a hacer:</strong> ¿Está la organización preparada para el crecimiento que contemplan? Gonzalo y Luis saben hacer restaurantes. La pregunta es si saben construir una organización que haga restaurantes sin que ellos estén en cada uno.</div>
+          </div>
+        </div>
+
+      </div><!-- /tab-decision -->
+
+
+      <!-- ══ TAB 5: DATOS ══ -->
+      <div class="tab-pane" id="tab-datos">
+
+        <h2 class="section-title mt-0"><span class="step-num" style="background:var(--gold-pale);color:var(--navy);">≡</span>Datos de referencia del caso</h2>
+
+        <div class="reveal-block open">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Estructura societaria del Grupo Gorki</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <table class="data-table">
+              <thead><tr><th>Sociedad</th><th>Actividad</th><th>Participación Gorki</th><th>Modelo</th></tr></thead>
+              <tbody>
+                <tr><td>Alimentación Gorki S.L.</td><td>Sociedad matriz. Gestiona Málaga (Strachan, Larios, Malagueta, Marbella)</td><td>50% Gonzalo / 50% Luis (vía Gormarki)</td><td>Propio</td></tr>
+                <tr><td>Pony Pisador S.L. (Sevilla)</td><td>Restaurante Sevilla</td><td>70%</td><td>Socio gestor</td></tr>
+                <tr><td>Tabanco S.L. (Córdoba)</td><td>Restaurante Córdoba</td><td>65%</td><td>Socios inversores (35%)</td></tr>
+                <tr><td>Capicoba S.L. (Madrid)</td><td>Master-franquicia Madrid</td><td>70%</td><td>Master-franquicia</td></tr>
+                <tr><td>Ruedalabola (La Barra, Málaga)</td><td>Restaurante La Barra</td><td>Gonzalo+Luis 35% personal</td><td>Con socios externos (5% c/u)</td></tr>
+              </tbody>
+            </table>
+            <div class="callout callout-navy mt-8">Franquicias activas: San Pedro de Alcántara (Marbella), Palma de Mallorca, Pozuelo, Moraleja, Majadahonda. Pendientes junio 2008: 2 más en Madrid + 1 Palma.</div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Condiciones del modelo de franquicia</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="info-grid">
+              <div class="info-item"><div class="info-item-label">Canon inicial</div><div class="info-item-value">30.000–35.000 € a la firma, según superficie del local</div></div>
+              <div class="info-item"><div class="info-item-label">Royalty año 1</div><div class="info-item-value">Fijo mensual: 1.500–2.500 € según tamaño y ubicación</div></div>
+              <div class="info-item"><div class="info-item-label">Royalty año 2+</div><div class="info-item-value">4–5% sobre facturación</div></div>
+              <div class="info-item"><div class="info-item-label">Rápeles proveedores</div><div class="info-item-value">Para Gorki, no para el franquiciado. Así negocian mejores precios consolidados.</div></div>
+              <div class="info-item"><div class="info-item-label">Lo que Gorki aporta</div><div class="info-item-value">Formación, carta y menús, análisis de local, compras y proveedores definidos, imagen de marca</div></div>
+              <div class="info-item"><div class="info-item-label">Master-franquicia Madrid</div><div class="info-item-value">Canon fijo + % facturación desde año 2. Gestionada desde Málaga.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Mystery shoppers: Estándares clave por restaurante</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="comp-wrapper">
+              <table class="data-table" style="font-size:12px;">
+                <thead>
+                  <tr>
+                    <th style="min-width:180px;">Estándar</th>
+                    <th>San Pedro</th><th>Marbella</th><th>Larios</th><th>Malagueta</th>
+                    <th>Sevilla</th><th>Córdoba</th><th>Madrid</th><th>Pozuelo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Saluda y sonríe al llegar</td>
+                    <td>Siempre</td><td>Siempre</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>Siempre</td><td>Siempre</td><td>A veces</td><td>Siempre</td><td>Siempre</td>
+                  </tr>
+                  <tr>
+                    <td>Atención sin demora</td>
+                    <td>Siempre</td><td>Siempre</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>Siempre</td><td>Siempre</td><td>A veces</td><td>Siempre</td><td>Siempre</td>
+                  </tr>
+                  <tr>
+                    <td>Comprueba satisfacción</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>A veces</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>Siempre</td><td>Siempre</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>A veces</td><td>Siempre</td>
+                  </tr>
+                  <tr>
+                    <td>Ofrece bebida adicional</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>A veces</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>A veces</td><td>Siempre</td>
+                    <td style="color:var(--red-accent);font-weight:700">NUNCA</td>
+                    <td>Siempre</td><td>Siempre</td>
+                  </tr>
+                  <tr>
+                    <td>Lo consumido = lo pagado</td>
+                    <td>Siempre</td><td>A veces</td><td>Siempre</td><td>Siempre</td>
+                    <td>Siempre</td><td>Siempre</td><td>A veces</td><td>Siempre</td>
+                  </tr>
+                  <tr>
+                    <td>Volvería al local</td>
+                    <td>Siempre</td><td>Siempre</td><td>A veces</td><td>Siempre</td>
+                    <td>Siempre</td><td>Siempre</td><td>Siempre</td><td>Siempre</td>
+                  </tr>
+                  <tr>
+                    <td>Recomendaría el local</td>
+                    <td>Siempre</td><td>Siempre</td><td>Siempre</td><td>Siempre</td>
+                    <td>Siempre</td><td>Siempre</td><td>Siempre</td><td>Siempre</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-red mt-8"><strong>Larios y Córdoba Tabanco</strong> son los locales con más "NUNCA" en estándares básicos. Larios es un local propio de Málaga. Córdoba tiene socios solo como inversores. Ambos casos ilustran que la implicación del gestor local es determinante para la calidad del servicio.</div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header"><div class="reveal-header-left"><span class="reveal-title">Índices de eficiencia por establecimiento (media 2007)</span></div><span class="reveal-icon">▼</span></div>
+          <div class="reveal-body">
+            <div class="comp-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Establecimiento</th>
+                    <th class="num">Estado local</th>
+                    <th class="num">Acogida</th>
+                    <th class="num">Hab. comerciales</th>
+                    <th class="num">Control tiempos</th>
+                    <th class="num">Presentación</th>
+                    <th class="num">Atención caja</th>
+                    <th class="num">Satisfacción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Sevilla</td><td class="num">90</td><td class="num">100</td><td class="num">73</td><td class="num">92</td><td class="num">93</td><td class="num">70</td><td class="num">96</td></tr>
+                  <tr><td>Marbella</td><td class="num">70</td><td class="num">100</td><td class="num">68</td><td class="num">81</td><td class="num">83</td><td class="num">60</td><td class="num">92</td></tr>
+                  <tr><td>San Pedro de Alcántara</td><td class="num">100</td><td class="num">100</td><td class="num">55</td><td class="num">94</td><td class="num">90</td><td class="num">60</td><td class="num">92</td></tr>
+                  <tr><td style="color:var(--red-accent)"><strong>Córdoba TABANCO</strong></td><td class="num">100</td><td class="num" style="color:var(--red-accent)"><strong>75</strong></td><td class="num" style="color:var(--red-accent)"><strong>45</strong></td><td class="num">72</td><td class="num">88</td><td class="num">60</td><td class="num">96</td></tr>
+                  <tr><td>Malagueta</td><td class="num">70</td><td class="num">100</td><td class="num">73</td><td class="num">75</td><td class="num">88</td><td class="num">60</td><td class="num">88</td></tr>
+                  <tr><td style="color:var(--red-accent)"><strong>Larios</strong></td><td class="num">70</td><td class="num" style="color:var(--red-accent)"><strong>38</strong></td><td class="num" style="color:var(--red-accent)"><strong>36</strong></td><td class="num">93</td><td class="num">86</td><td class="num">60</td><td class="num">79</td></tr>
+                  <tr><td>Madrid</td><td class="num">90</td><td class="num">100</td><td class="num">73</td><td class="num">88</td><td class="num">76</td><td class="num">50</td><td class="num">88</td></tr>
+                  <tr><td>Pozuelo</td><td class="num">90</td><td class="num">100</td><td class="num">82</td><td class="num">83</td><td class="num">76</td><td class="num">80</td><td class="num">83</td></tr>
+                  <tr class="total-row"><td><strong>Media</strong></td><td class="num"><strong>85</strong></td><td class="num"><strong>89</strong></td><td class="num"><strong>63</strong></td><td class="num"><strong>85</strong></td><td class="num"><strong>85</strong></td><td class="num"><strong>63</strong></td><td class="num"><strong>89</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-datos -->
+
+    </div><!-- /tabs-wrapper -->
+  </div><!-- /page-content -->
 </main>
+
 <script src="nav.js"></script>
 </body>
 </html>
