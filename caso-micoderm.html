@@ -859,14 +859,11 @@
           Matriz de decision — Criterios x Alternativas
         </h2>
 
-        <p class="body-text">Cada criterio se puntua de 1 (muy desfavorable) a 4 (muy favorable) para cada alternativa. El peso refleja la importancia relativa del criterio en este caso concreto.</p>
-
         <div class="comp-wrapper">
           <table class="matrix-table">
             <thead>
               <tr>
                 <th style="text-align:left;">Criterio</th>
-                <th>Peso</th>
                 <th>A — Mantener</th>
                 <th>B — Salir SRSS</th>
                 <th>C — Pedir subida</th>
@@ -875,52 +872,40 @@
             <tbody>
               <tr>
                 <td><strong>1. Rentabilidad del producto</strong><br><span style="font-size:11px;color:var(--ink-light);">Margen contrib. + tendencia op.</span></td>
-                <td style="text-align:center;">x3</td>
-                <td style="text-align:center;"><span class="score-low">1</span><br><span style="font-size:11px;">Negativa y deterioro</span></td>
-                <td style="text-align:center;"><span class="score-high">4</span><br><span style="font-size:11px;">Excelente en todos los esc.</span></td>
-                <td style="text-align:center;"><span class="score-mid">3</span><br><span style="font-size:11px;">Buena si se concede</span></td>
+                <td><span class="score-low">Negativa y en deterioro</span></td>
+                <td><span class="score-high">Excelente en todos los escenarios</span></td>
+                <td><span class="score-mid">Buena si se concede</span></td>
               </tr>
               <tr>
                 <td><strong>2. Valor estrategico</strong><br><span style="font-size:11px;color:var(--ink-light);">Fuerza ventas, competencia, posicion</span></td>
-                <td style="text-align:center;">x3</td>
-                <td style="text-align:center;"><span class="score-high">4</span><br><span style="font-size:11px;">Intacto</span></td>
-                <td style="text-align:center;"><span class="score-low">2</span><br><span style="font-size:11px;">Riesgo de perder posicion</span></td>
-                <td style="text-align:center;"><span class="score-high">4</span><br><span style="font-size:11px;">Intacto si se concede</span></td>
+                <td><span class="score-high">Intacto</span></td>
+                <td><span class="score-low">En riesgo: perdida de posicion y herramienta comercial</span></td>
+                <td><span class="score-high">Intacto si se concede</span></td>
               </tr>
               <tr>
                 <td><strong>3. Riesgo regulatorio</strong><br><span style="font-size:11px;color:var(--ink-light);">Control del proceso, probabilidad</span></td>
-                <td style="text-align:center;">x3</td>
-                <td style="text-align:center;"><span class="score-high">4</span><br><span style="font-size:11px;">Ninguno</span></td>
-                <td style="text-align:center;"><span class="score-mid">3</span><br><span style="font-size:11px;">Voluntario, controlado</span></td>
-                <td style="text-align:center;"><span class="score-low">1</span><br><span style="font-size:11px;">Alto e incontrolado</span></td>
+                <td><span class="score-high">Ninguno</span></td>
+                <td><span class="score-mid">Controlado: salida voluntaria</span></td>
+                <td><span class="score-low">Alto e incontrolado: riesgo de exclusion forzosa</span></td>
               </tr>
               <tr>
                 <td><strong>4. Responsabilidad del lider</strong><br><span style="font-size:11px;color:var(--ink-light);">Acceso usuarios vulnerables, reputacion</span></td>
-                <td style="text-align:center;">x3</td>
-                <td style="text-align:center;"><span class="score-high">4</span><br><span style="font-size:11px;">Cumple plenamente</span></td>
-                <td style="text-align:center;"><span class="score-low">1</span><br><span style="font-size:11px;">Deja sin acceso a ancianos</span></td>
-                <td style="text-align:center;"><span class="score-high">4</span><br><span style="font-size:11px;">Usuarios protegidos si se concede</span></td>
+                <td><span class="score-high">Cumple plenamente</span></td>
+                <td><span class="score-low">Tension alta: ancianos sin acceso subvencionado</span></td>
+                <td><span class="score-high">Usuarios protegidos si se concede</span></td>
               </tr>
               <tr>
                 <td><strong>5. Viabilidad y control</strong><br><span style="font-size:11px;color:var(--ink-light);">Plazos, certeza del resultado</span></td>
-                <td style="text-align:center;">x1</td>
-                <td style="text-align:center;"><span class="score-high">4</span><br><span style="font-size:11px;">Inmediata, sin proceso</span></td>
-                <td style="text-align:center;"><span class="score-mid">3</span><br><span style="font-size:11px;">6-12 meses de proceso</span></td>
-                <td style="text-align:center;"><span class="score-low">1</span><br><span style="font-size:11px;">Resultado no controlado</span></td>
-              </tr>
-              <tr class="total-row">
-                <td><strong>PUNTUACION PONDERADA</strong></td>
-                <td style="text-align:center;">—</td>
-                <td style="text-align:center;font-size:18px;"><strong>(1+4+4+4)x3 + 4x1 = <span class="score-mid">43</span></strong></td>
-                <td style="text-align:center;font-size:18px;"><strong>(4+2+3+1)x3 + 3x1 = <span class="score-mid">33</span></strong></td>
-                <td style="text-align:center;font-size:18px;"><strong>(3+4+1+4)x3 + 1x1 = <span class="score-mid">37</span></strong></td>
+                <td><span class="score-high">Maxima: no requiere proceso</span></td>
+                <td><span class="score-mid">Media: 6-12 meses de tramitacion</span></td>
+                <td><span class="score-low">Baja: resultado no controlado por LIDERM</span></td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout callout-gold mt-8">
-          <strong>Lectura de la matriz:</strong> cuando se incorpora la responsabilidad del lider como criterio de peso equivalente a los demas, la clasificacion cambia radicalmente respecto a un analisis puramente financiero. La Alt. A obtiene la puntuacion mas alta por su perfil equilibrado. La Alt. B, que "ganaba" en el analisis financiero, cae al ultimo lugar por su tension con el criterio de responsabilidad. La Alt. C ocupa una posicion intermedia, condicionada a un resultado que no controla LIDERM.
+          <strong>Lectura de la matriz:</strong> no hay una alternativa dominante. La Alt. B gana en rentabilidad pero pierde en responsabilidad y valor estrategico. La Alt. A gana en todo menos en lo que mas urge resolver: la tendencia financiera. La Alt. C es la mas equilibrada si sale bien, pero es la que menos controla LIDERM. La tension entre criterios es el nucleo del debate.
         </div>
 
         <h2 class="section-title">
