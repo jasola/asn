@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micoderm - Analisis de Situaciones de Negocio</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .case-hero {
+      background: var(--navy);
+      padding: 52px 48px 44px;
+      position: relative; overflow: hidden;
+      border-bottom: 3px solid var(--gold);
+    }
+    .case-hero::after {
+      content: 'Rx';
+      position: absolute; right: 48px; top: 20px;
+      font-family: var(--font-title); font-size: 160px;
+      color: rgba(201,168,76,0.05); line-height: 1;
+      pointer-events: none; letter-spacing: -0.02em;
+    }
+    .case-hero-inner { position: relative; z-index: 1; max-width: 680px; }
+    .case-hero-code {
+      font-family: var(--font-ui); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .case-hero-code::before { content:''; display:inline-block; width:24px; height:1px; background:var(--gold); }
+    .case-hero h1 { font-family:var(--font-title); font-size:38px; font-weight:700; color:var(--white); line-height:1.2; margin-bottom:14px; }
+    .case-hero-quote { font-family:var(--font-body); font-size:15px; color:rgba(255,255,255,0.55); font-style:italic; line-height:1.65; border-left:2px solid rgba(201,168,76,0.4); padding-left:16px; margin-bottom:22px; }
+    .case-hero-meta { display:flex; flex-wrap:wrap; gap:12px; }
+    .meta-chip { font-family:var(--font-ui); font-size:11.5px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.7); padding:5px 12px; border-radius:20px; display:flex; align-items:center; gap:6px; }
+    .meta-chip strong { color:var(--gold-light); }
+
+    .topbar { background:var(--white); border-bottom:1px solid var(--border); padding:0 40px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; box-shadow:var(--shadow-sm); }
+    .case-section { margin-bottom:0; }
+    .case-section + .case-section { border-top:1px solid var(--border-light); padding-top:40px; margin-top:40px; }
+    .sub-label { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+    .sub-heading { font-family:var(--font-title); font-size:20px; font-weight:600; color:var(--navy); margin-bottom:12px; }
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+    @media (max-width:650px) { .info-grid { grid-template-columns:1fr; } }
+    .info-item { background:var(--white); border:1px solid var(--border-light); border-radius:var(--radius); padding:16px 18px; }
+    .info-item-label { font-family:var(--font-ui); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-light); margin-bottom:5px; }
+    .info-item-value { font-family:var(--font-ui); font-size:14px; color:var(--ink); line-height:1.5; }
+    .comp-wrapper { overflow-x:auto; margin:16px 0; }
+    .matrix-table { width:100%; border-collapse:collapse; font-family:var(--font-ui); font-size:13px; }
+    .matrix-table th { background:var(--navy); color:var(--gold-light); padding:10px 14px; text-align:center; font-size:11.5px; font-weight:600; }
+    .matrix-table th:first-child { text-align:left; }
+    .matrix-table td { padding:9px 14px; border-bottom:1px solid var(--border-light); color:var(--ink-mid); vertical-align:top; }
+    .matrix-table td:not(:first-child) { text-align:center; }
+    .matrix-table tr:nth-child(even) td { background:#f8f6f1; }
+    .score-high { color:var(--green-accent); font-weight:700; }
+    .score-mid  { color:#8a6000; font-weight:600; }
+    .score-low  { color:var(--red-accent); font-weight:700; }
+    .decision-box { background:var(--navy); border:2px solid var(--gold); border-radius:var(--radius-lg); padding:32px 36px; margin-top:28px; }
+    .decision-box-label { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+    .decision-box-main { font-family:var(--font-title); font-size:24px; font-weight:600; color:var(--white); line-height:1.35; margin-bottom:14px; }
+    .decision-box-rationale { font-family:var(--font-body); font-size:15px; color:rgba(255,255,255,0.65); line-height:1.7; font-style:italic; }
+    .body-text { font-family:var(--font-body); font-size:15.5px; color:var(--ink-mid); line-height:1.75; margin-bottom:14px; }
+
+    /* ── Calc box ─────────────────────────────────────── */
+    .calc-box { background:var(--navy); border-radius:var(--radius); padding:22px 26px; margin:16px 0; font-family:'Source Sans 3',monospace; }
+    .calc-line { color:rgba(255,255,255,0.65); font-size:13.5px; line-height:2; }
+    .calc-line .op { color:var(--gold); }
+    .calc-result { color:var(--white); font-size:17px; font-weight:700; border-top:1px solid rgba(201,168,76,0.3); padding-top:10px; margin-top:6px; }
+    .calc-result .big { font-size:22px; color:var(--gold-light); }
+
+    /* ── Scenario cards ───────────────────────────────── */
+    .scenario-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:20px 0; }
+    @media (max-width:750px) { .scenario-grid { grid-template-columns:1fr; } }
+    .scenario-card { border-radius:var(--radius); padding:20px 20px 18px; }
+    .scenario-card.opt  { background:#e8f5ee; border:1px solid #b2d8c0; }
+    .scenario-card.mid  { background:#fdf6e3; border:1px solid #e0c47a; }
+    .scenario-card.pes  { background:#fce8ea; border:1px solid #d9a3a8; }
+    .scenario-card-label { font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:8px; }
+    .scenario-card.opt .scenario-card-label  { color:var(--green-accent); }
+    .scenario-card.mid .scenario-card-label  { color:#8a6000; }
+    .scenario-card.pes .scenario-card-label  { color:var(--red-accent); }
+    .scenario-card-val { font-family:var(--font-title); font-size:28px; font-weight:700; margin-bottom:4px; }
+    .scenario-card.opt .scenario-card-val  { color:var(--green-accent); }
+    .scenario-card.mid .scenario-card-val  { color:#8a6000; }
+    .scenario-card.pes .scenario-card-val  { color:var(--red-accent); }
+    .scenario-card-sub { font-family:var(--font-ui); font-size:12px; color:var(--ink-light); line-height:1.5; }
+
+    /* ── Segment chips ───────────────────────────────── */
+    .seg-bar { display:flex; gap:12px; flex-wrap:wrap; margin:16px 0; }
+    .seg-chip { flex:1; min-width:120px; background:var(--white); border:1px solid var(--border-light); border-radius:var(--radius); padding:14px 16px; }
+    .seg-chip-pct { font-family:var(--font-title); font-size:28px; font-weight:700; color:var(--navy); }
+    .seg-chip-label { font-family:var(--font-ui); font-size:11px; color:var(--ink-light); margin-top:3px; line-height:1.4; }
+    .seg-chip-note  { font-family:var(--font-ui); font-size:11px; color:var(--red-accent); font-weight:600; margin-top:4px; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<nav class="sidebar" id="sidebar"></nav>
+
+<main class="main">
+
+  <div class="case-hero">
+    <div class="case-hero-inner">
+      <div class="case-hero-code">Caso 05 - ASN-49</div>
+      <h1>Micoderm</h1>
+      <div class="case-hero-quote">
+        "Micoderm perdía dinero en 2010. Era el momento de tomar alguna decision sobre el producto."
+      </div>
+      <div class="case-hero-meta">
+        <span class="meta-chip"><strong>Protagonista:</strong> Jorge Serna (DG LIDERM)</span>
+        <span class="meta-chip"><strong>Lugar:</strong> Espana</span>
+        <span class="meta-chip"><strong>Fecha:</strong> Septiembre 2010</span>
+        <span class="meta-chip"><strong>Sector:</strong> Farmacia / Dermatologia</span>
+        <span class="meta-chip"><strong>Fuente:</strong> IESE Business School</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      <a href="index.html" style="color:var(--ink-light);text-decoration:none;">Inicio</a>
+      <span class="sep">/</span>
+      <span class="current">Micoderm</span>
+    </div>
+    <div class="topbar-meta">
+      <span class="topbar-tag">Precios</span>
+      <span class="topbar-tag">Marketing</span>
+      <button class="menu-toggle" id="menuToggle">&#9776;</button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="tabs-wrapper">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-metodologia">Metodo aplicado</button>
+        <button class="tab-btn" data-tab="tab-numeros">Analisis numerico</button>
+        <button class="tab-btn" data-tab="tab-alternativas">Alternativas</button>
+        <button class="tab-btn" data-tab="tab-decision">Decision</button>
+        <button class="tab-btn" data-tab="tab-datos">Datos del caso</button>
+      </div>
+
+
+      <!-- ======================================================
+           TAB 1: METODO APLICADO
+      ====================================================== -->
+      <div class="tab-pane active" id="tab-metodologia">
+
+        <div class="case-section">
+          <h2 class="section-title mt-0">
+            <span class="step-num">1</span>
+            Predefinicion (Hipotesis inicial)
+          </h2>
+          <p class="section-intro"><span class="card-badge badge-espontanea">Postura espontanea</span></p>
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">Cual es la hipotesis de partida?</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <p class="body-text">Jorge Serna debe decidir que hacer con Micoderm, un medicamento que lleva 33 anos en el mercado, es muy conocido, vende mas de 2 millones de unidades al ano, pero <strong>pierde dinero</strong> porque su precio (fijado por el Ministerio de Sanidad) no cubre sus costes.</p>
+              <p class="body-text">La hipotesis espontanea suele ser: <em>"Si el producto pierde dinero, hay que subir el precio o retirarlo del mercado."</em> Pero el metodo exige ir mas alla: Cual es realmente el problema? Hay alternativas viables? Cuales son los riesgos de cada una?</p>
+              <div class="callout callout-gold">
+                <strong>Atencion al diagnostico sincromatico:</strong> la perdida de dinero es el sintoma, no el problema. El problema real es la rigidez regulatoria del SRSS que impide que el precio refleje los costes reales. Eso genera un dilema de estrategia de producto con multiples dimensiones: financiera, comercial, reputacional y regulatoria.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-section">
+          <h2 class="section-title">
+            <span class="step-num">2</span>
+            Recogida y Clasificacion de Informacion
+          </h2>
+          <p class="section-intro">
+            <span class="card-badge badge-rigurosa">Recogida: rigurosa (datos de consultora + anexos)</span>
+          </p>
+
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">A. La empresa y el mercado</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">LIDERM</div>
+                  <div class="info-item-value">Lider del mercado dermatologogico espanol. Ventas: 150M EUR sobre mercado total de 1.000M EUR.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Portafolio</div>
+                  <div class="info-item-value">Tres categorias en volumen similar: medicamentos, EFP y cosmeticos. Distribucion directa a 12.000 farmacias.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Contexto 2010</div>
+                  <div class="info-item-value">Buen ano: ventas +10%. Pero crisis economica en Espana y presion sobre el gasto publico sanitario.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Fuerzas de venta</div>
+                  <div class="info-item-value">Dos equipos: visitadores medicos (generan prescripciones) y visitadores de farmacia (pedidos, reposicion, informacion de mercado).</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">B. El producto: Micoderm</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">Indicacion</div>
+                  <div class="info-item-value">Prevencion Y tratamiento de la dermatitis de pañal. Unico producto doble-indicacion en el SRSS.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Historia</div>
+                  <div class="info-item-value">33 anos en el mercado. Ampliamente conocido por medicos, farmaceuticos y usuarios. Vendible sin prescripcion.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Volumen</div>
+                  <div class="info-item-value">Mas de 2.196.000 unidades/ano. Presente en el 98% de las farmacias espanolas.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Peso en LIDERM</div>
+                  <div class="info-item-value">Algo menos del 2% de ventas totales de LIDERM. El doble de ingresos que el resto de la familia Bebpiel.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Precio (congelado desde 2000)</div>
+                  <div class="info-item-value">PVL: 1,53 EUR/ud. PVP: 2,37 EUR/ud. Desde 2004 el precio no cubre costes.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Coste total unitario</div>
+                  <div class="info-item-value">1,69 EUR/ud (fabricacion 1,16 + ventas/dist. 0,32 + generales 0,21). Perdida: -0,16 EUR/ud.</div>
+                </div>
+              </div>
+              <div class="callout callout-red mt-16">
+                <strong>La aritmetica basica:</strong> PVL = 1,53 EUR. Coste total = 1,69 EUR. Margen unitario = <strong>-0,16 EUR</strong>. Con 2,196 millones de unidades, la perdida anual estimada es de aproximadamente <strong>-351.000 EUR</strong>. Y los costes de fabricacion crecen al 3% anual.
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">C. El sistema de reembolso SRSS y la regulacion</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <p class="body-text">El SRSS (Sistema de Reembolso de la Seguridad Social) subvenciona medicamentos prescritos en el sistema publico: 60% de descuento para trabajadores en activo, 100% para pensionistas. El precio final lo fija el Ministerio de Sanidad, congelado desde 2000.</p>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">Condicion para estar en el SRSS</div>
+                  <div class="info-item-value">Debe ser medicamento (no cosmético), orientado al tratamiento (no solo prevencion), y cumplir requisitos tecnicos.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Riesgo de solicitar subida</div>
+                  <div class="info-item-value">El Ministerio podria revisar el estatus: las propiedades de tratamiento de Micoderm son menos solidas que las de prevencion. Riesgo de exclusion.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Si sale del SRSS</div>
+                  <div class="info-item-value">LIDERM puede fijar el precio libremente. Pero el 50% de las ventas proviene del canal SRSS. Caida de volumen inevitable.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Proceso de salida</div>
+                  <div class="info-item-value">6 meses a 1 ano ante comision interministerial. No es rapido ni automatico.</div>
+                </div>
+              </div>
+              <div class="callout callout-navy mt-16">
+                <strong>Posicion unica de Micoderm en el SRSS:</strong> Es el unico producto de prevencion Y tratamiento de dermatitis de pañal en el sistema. Si sale, podria crearse un vacio que un competidor ocupe. Esto tiene implicaciones estrategicas mas alla del producto.
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">D. Segmentacion de usuarios y dinamica comercial</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <div class="seg-bar">
+                <div class="seg-chip">
+                  <div class="seg-chip-pct">60%</div>
+                  <div class="seg-chip-label">Ventas a ancianos</div>
+                  <div class="seg-chip-note">80% con descuento 100% (pensionistas). Alta sensibilidad al precio.</div>
+                </div>
+                <div class="seg-chip">
+                  <div class="seg-chip-pct">30%</div>
+                  <div class="seg-chip-label">Ventas para bebes</div>
+                  <div class="seg-chip-label" style="color:var(--green-accent);font-weight:600;">Menos sensibles al precio. Boca-oreja esencial.</div>
+                </div>
+                <div class="seg-chip">
+                  <div class="seg-chip-pct">50%</div>
+                  <div class="seg-chip-label">Canal SRSS (prescripcion publica)</div>
+                  <div class="seg-chip-note">Desapareceria o se reduciria drasticamente si sale del SRSS.</div>
+                </div>
+                <div class="seg-chip">
+                  <div class="seg-chip-pct">40%</div>
+                  <div class="seg-chip-label">Venta sin prescripcion publica</div>
+                  <div class="seg-chip-label" style="color:var(--green-accent);">El mas resistente a cambio de estatus.</div>
+                </div>
+              </div>
+              <div class="callout callout-gold mt-8">
+                <strong>Clave de segmentacion:</strong> los dos segmentos criticos reaccionan de forma opuesta. Los ancianos (60% del volumen) son muy sensibles al precio y dependen del descuento del SRSS. Los padres con bebes (30%) son menos sensibles al precio y se guian por recomendacion. Una subida de precio fuera del SRSS perjudica principalmente a los ancianos, el segmento de mayor volumen.
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-block">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">E. Valor estrategico de Micoderm para LIDERM</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <p class="body-text">Micoderm no es un producto cualquiera aunque represente menos del 2% de la facturacion. Su valor va mas alla de su margen directo:</p>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-item-label">Herramienta comercial</div>
+                  <div class="info-item-value">Los vendedores lo usan activamente para abrir cuentas nuevas con medicos y farmacias. Un producto barato, conocido y sin receta es el mejor "pie en la puerta".</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Presion sobre competidores</div>
+                  <div class="info-item-value">Su bajo precio (2,37 EUR) ejerce presion sobre los precios de todos los productos del mercado. Si desaparece, los competidores pueden subir precios.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Imagen de marca</div>
+                  <div class="info-item-value">33 anos de historia. Conocido por medicos de mayor edad. Reputacion de accesibilidad y calidad. Sacarlo del SRSS puede percibirse como practica poco etica.</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-item-label">Posicion en el SRSS</div>
+                  <div class="info-item-value">Si Micoderm sale, un competidor podria pedir la inclusion. LIDERM perderia el unico producto doble-indicacion del sistema.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-section">
+          <h2 class="section-title">
+            <span class="step-num">3</span>
+            Definicion del Problema
+          </h2>
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">Cual es el problema real?</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <p class="body-text">El problema no es simplemente que Micoderm "pierde dinero". El problema es que <strong>LIDERM tiene un activo estrategico de alto valor comercial cuyo precio esta regulado por debajo de sus costes</strong>, y cualquier decision de cambio implica un trade-off entre rentabilidad directa, valor estrategico del producto y riesgo regulatorio.</p>
+              <div class="callout callout-gold">
+                <strong>Definicion del problema:</strong> Jorge Serna debe decidir cual es la estrategia optima para Micoderm en un entorno donde (a) el precio esta regulado y genera perdidas, (b) el producto tiene valor estrategico que supera su margen directo, (c) las alternativas de cambio conllevan riesgos regulatorios y comerciales significativos, y (d) la tendencia de costes empeora ano a ano.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-section">
+          <h2 class="section-title">
+            <span class="step-num">4</span>
+            Criterios de Valoracion
+          </h2>
+          <div class="reveal-block open">
+            <div class="reveal-header">
+              <div class="reveal-header-left"><span class="reveal-title">Con que criterios evaluar las alternativas?</span></div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <div class="comp-wrapper">
+                <table class="matrix-table">
+                  <thead><tr><th>Criterio</th><th>Descripcion</th><th>Peso</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Rentabilidad directa de Micoderm</strong></td>
+                      <td>Capacidad de revertir o reducir la perdida por unidad y en total</td>
+                      <td><span class="score-high">Alto</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Valor estrategico para LIDERM</strong></td>
+                      <td>Impacto sobre la fuerza de ventas, la imagen y la posicion competitiva</td>
+                      <td><span class="score-high">Alto</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Riesgo regulatorio</strong></td>
+                      <td>Probabilidad de que el Ministerio excluya a Micoderm del SRSS o rechace la peticion</td>
+                      <td><span class="score-high">Alto</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Impacto sobre usuarios vulnerables</strong></td>
+                      <td>Efecto sobre ancianos pensionistas (80% descuento 100%) y familias con bebes</td>
+                      <td><span class="score-mid">Medio</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Viabilidad de ejecucion</strong></td>
+                      <td>Plazos, complejidad del proceso y certeza del resultado</td>
+                      <td><span class="score-mid">Medio</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-section">
+          <h2 class="section-title">
+            <span class="step-num">5</span>
+            Alternativas y Decision
+          </h2>
+          <p class="section-intro">Ver pestanas <strong>Alternativas</strong> y <strong>Decision</strong> para el desarrollo completo.</p>
+          <div class="callout callout-navy">
+            Las tres alternativas (mantener, salir del SRSS, pedir subida) se analizan con calculos en la pestana <strong>"Analisis numerico"</strong> y con matrices de valoracion en <strong>"Alternativas"</strong>.
+          </div>
+        </div>
+
+        <div class="case-section">
+          <div class="reveal-block">
+            <div class="reveal-header">
+              <div class="reveal-header-left">
+                <span class="reveal-icon" style="color:var(--gold);">&#9881;</span>
+                <span class="reveal-title">Notas para tutoria — Metodo</span>
+              </div>
+              <span class="reveal-icon">&#9660;</span>
+            </div>
+            <div class="reveal-body">
+              <p class="body-text"><strong>Pregunta de apertura eficaz:</strong> "Cuanto pierde LIDERM con Micoderm al ano?" Fuerza el calculo basico (2,196M ud x -0,16 EUR = ~351.000 EUR) y contextualiza: ese importe es menos del 0,25% de la facturacion de LIDERM. La perdida es real pero gestionable. Eso cambia el tono del debate.</p>
+              <p class="body-text"><strong>Trampa frecuente:</strong> los participantes tienden a infravalorar el valor estrategico de Micoderm como "abridor de puertas" para la fuerza de ventas, y a centrar el debate solo en el margen directo. Conviene sacar explicitamente ese punto con preguntas como: "Si eliminas Micoderm, como afecta a la capacidad de tus visitadores para conseguir nuevas cuentas?"</p>
+              <p class="body-text"><strong>Eje del debate:</strong> el caso enfrenta logica financiera a corto plazo (el producto pierde dinero) vs. logica estrategica a largo plazo (el producto crea valor indirecto). Los perfiles mas analiticos tienden a querer salir del SRSS; los mas comerciales, a mantenerlo. El metodo ayuda a estructurar ambas perspectivas.</p>
+              <p class="body-text"><strong>Tema etico:</strong> la posibilidad de subir el precio a ancianos pensionistas que dependen del 100% de descuento es una discusion con carga etica real. Vale la pena abrir ese angulo, especialmente en programas donde los participantes tienen empresas familiares o clientes directos.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-metodologia -->
+
+
+      <!-- ======================================================
+           TAB 2: ANALISIS NUMERICO
+      ====================================================== -->
+      <div class="tab-pane" id="tab-numeros">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num" style="background:var(--gold-pale);color:var(--navy);">$</span>
+          Situacion actual: la perdida de Micoderm
+        </h2>
+
+        <div class="calc-box">
+          <div class="calc-line"><span class="op">PVL (precio venta laboratorio)</span>&nbsp;&nbsp;&nbsp;1,53 EUR/ud</div>
+          <div class="calc-line"><span class="op">Coste fabricacion (externalizado)</span>&nbsp;&nbsp;&nbsp;1,16 EUR/ud</div>
+          <div class="calc-line"><span class="op">Costes ventas y distribucion</span>&nbsp;&nbsp;&nbsp;0,32 EUR/ud</div>
+          <div class="calc-line"><span class="op">Gastos generales asignados</span>&nbsp;&nbsp;&nbsp;0,21 EUR/ud</div>
+          <div class="calc-line"><span class="op">Coste total unitario</span>&nbsp;&nbsp;&nbsp;1,69 EUR/ud</div>
+          <div class="calc-result">Margen unitario = 1,53 - 1,69 = <span class="big">-0,16 EUR/ud</span></div>
+        </div>
+
+        <div class="calc-box" style="margin-top:0;">
+          <div class="calc-line"><span class="op">Unidades vendidas</span>&nbsp;&nbsp;&nbsp;2.196.000 ud/ano</div>
+          <div class="calc-line"><span class="op">Perdida por unidad</span>&nbsp;&nbsp;&nbsp;-0,16 EUR</div>
+          <div class="calc-result">Perdida total estimada = 2.196.000 x 0,16 = <span class="big">~351.000 EUR/ano</span></div>
+        </div>
+
+        <div class="callout callout-navy">
+          <strong>Contexto:</strong> LIDERM factura 150 millones EUR. La perdida de Micoderm (~351.000 EUR) representa menos del 0,25% de la facturacion. Es una perdida real y creciente, pero actualmente asumible. Sin embargo, con costes de fabricacion creciendo al 3% anual, en 5 anos el coste de fabricacion sera ~1,34 EUR (vs 1,16 actuales), ampliando la perdida sin cambio de precio.
+        </div>
+
+        <h2 class="section-title">
+          <span class="step-num" style="background:var(--gold-pale);color:var(--navy);">&#8801;</span>
+          Escenarios si Micoderm sale del SRSS
+        </h2>
+
+        <p class="body-text">La consultora independiente estima la caida de volumen en funcion del nuevo PVP. El grafico del Anexo 3 permite leer los siguientes valores aproximados a un PVP de 5,00 EUR (escenario razonable de subida):</p>
+
+        <div class="scenario-grid">
+          <div class="scenario-card opt">
+            <div class="scenario-card-label">Escenario Optimista</div>
+            <div class="scenario-card-val">-30%</div>
+            <div class="scenario-card-sub">Caida de volumen a PVP = 5 EUR. Quedan ~1.537.000 ud.</div>
+          </div>
+          <div class="scenario-card mid">
+            <div class="scenario-card-label">Escenario Normal</div>
+            <div class="scenario-card-val">-50%</div>
+            <div class="scenario-card-sub">Caida de volumen a PVP = 5 EUR. Quedan ~1.098.000 ud.</div>
+          </div>
+          <div class="scenario-card pes">
+            <div class="scenario-card-label">Escenario Pesimista</div>
+            <div class="scenario-card-val">-65%</div>
+            <div class="scenario-card-sub">Caida de volumen a PVP = 5 EUR. Quedan ~769.000 ud.</div>
+          </div>
+        </div>
+
+        <p class="body-text">Con PVP = 5,00 EUR el PVL seria 5,00 x 0,64 = <strong>3,20 EUR/ud</strong>. El margen unitario pasaria a 3,20 - 1,69 = <strong>+1,51 EUR/ud</strong>.</p>
+
+        <div class="comp-wrapper">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>Escenario</th>
+                <th>Unidades</th>
+                <th>PVL nuevo</th>
+                <th>Margen/ud</th>
+                <th>Resultado total</th>
+                <th>vs. situacion actual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Actual (SRSS)</strong></td>
+                <td>2.196.000</td>
+                <td>1,53</td>
+                <td>-0,16</td>
+                <td class="score-low">-351.000</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><strong>Fuera SRSS — Optimista</strong></td>
+                <td>1.537.200</td>
+                <td>3,20</td>
+                <td>+1,51</td>
+                <td class="score-high">+2.321.000</td>
+                <td class="score-high">+2.672.000</td>
+              </tr>
+              <tr>
+                <td><strong>Fuera SRSS — Normal</strong></td>
+                <td>1.098.000</td>
+                <td>3,20</td>
+                <td>+1,51</td>
+                <td class="score-high">+1.658.000</td>
+                <td class="score-high">+2.009.000</td>
+              </tr>
+              <tr>
+                <td><strong>Fuera SRSS — Pesimista</strong></td>
+                <td>768.600</td>
+                <td>3,20</td>
+                <td>+1,51</td>
+                <td class="score-high">+1.161.000</td>
+                <td class="score-high">+1.512.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-gold mt-8">
+          <strong>La aritmetica favorece claramente salir del SRSS en terminos financieros directos.</strong> Incluso en el escenario pesimista (caida del 65% del volumen), la mejora de margen unitario es tan grande que el resultado total es positivo. El punto de equilibrio de la decision esta muy lejos: incluso vendiendo solo 233.000 unidades (el 11% del volumen actual), el margen positivo compensaria la perdida actual.
+        </div>
+
+        <div class="callout callout-red mt-16">
+          <strong>Pero los numeros directos no son toda la historia.</strong> Esta tabla solo mide el margen directo de Micoderm. No captura: (1) el impacto en la eficacia de la fuerza de ventas, (2) la posible entrada de un competidor en el SRSS, (3) el dano reputacional, ni (4) los costes de ventas y generales que son asignaciones y no desaparecen si cae el volumen. El analisis financiero completo requiere considerar estos efectos indirectos.
+        </div>
+
+        <h2 class="section-title">
+          <span class="step-num" style="background:var(--gold-pale);color:var(--navy);">&#8801;</span>
+          Proyeccion de perdidas si se mantiene sin cambio
+        </h2>
+
+        <div class="comp-wrapper">
+          <table class="matrix-table">
+            <thead>
+              <tr><th>Ano</th><th>Coste fabricacion/ud</th><th>Coste total/ud</th><th>PVL</th><th>Margen/ud</th><th>Perdida total (2,196M ud)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>2010 (actual)</td><td>1,16</td><td>1,69</td><td>1,53</td><td>-0,16</td><td class="score-low">-351.000</td></tr>
+              <tr><td>2013 (+3 anos)</td><td>1,27</td><td>1,80</td><td>1,53</td><td>-0,27</td><td class="score-low">-593.000</td></tr>
+              <tr><td>2015 (+5 anos)</td><td>1,34</td><td>1,87</td><td>1,53</td><td>-0,34</td><td class="score-low">-747.000</td></tr>
+              <tr><td>2018 (+8 anos)</td><td>1,47</td><td>2,00</td><td>1,53</td><td>-0,47</td><td class="score-low">-1.032.000</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-red">
+          <strong>La opcion de no hacer nada no es estable.</strong> Con costes creciendo al 3% anual, en 5 anos la perdida casi se duplica. En 8 anos supera el millon de euros. Lo que hoy es asumible como estrategia de largo plazo deja de serlo.
+        </div>
+
+      </div><!-- /tab-numeros -->
+
+
+      <!-- ======================================================
+           TAB 3: ALTERNATIVAS
+      ====================================================== -->
+      <div class="tab-pane" id="tab-alternativas">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num">5</span>
+          Las tres alternativas de Jorge Serna
+        </h2>
+
+        <div class="reveal-block open">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Alternativa A — Mantener Micoderm en el SRSS sin cambios</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <p class="body-text">LIDERM sigue vendiendo Micoderm al precio actual (PVL 1,53 EUR), absorbiendo las perdidas con los margenes de otros productos mas rentables.</p>
+            <div class="comp-wrapper">
+              <table class="matrix-table">
+                <thead><tr><th>Criterio</th><th>Valoracion</th><th>Comentario</th></tr></thead>
+                <tbody>
+                  <tr><td>Rentabilidad directa Micoderm</td><td><span class="score-low">Mala y empeorando</span></td><td>Perdida de ~351.000 EUR/ano que crece al 3%+ anual. En 8 anos supera el millon.</td></tr>
+                  <tr><td>Valor estrategico</td><td><span class="score-high">Alto</span></td><td>Mantiene todas las ventajas: fuerza de ventas, imagen, presion competitiva, posicion en SRSS.</td></tr>
+                  <tr><td>Riesgo regulatorio</td><td><span class="score-high">Bajo</span></td><td>No hay accion ante el Ministerio. Sin riesgo de exclusion por iniciativa propia.</td></tr>
+                  <tr><td>Impacto usuarios vulnerables</td><td><span class="score-high">Ninguno</span></td><td>Ancianos y familias mantienen el acceso al precio actual con descuento.</td></tr>
+                  <tr><td>Viabilidad</td><td><span class="score-high">Maxima</span></td><td>No requiere ningun proceso ni aprobacion.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-navy mt-16">
+              <strong>Conclusion sobre Alt. A:</strong> Es viable a corto plazo pero no es una estrategia sostenible. La inaccion es una decision, no la ausencia de ella. El problema se agrava con el tiempo y llegara un momento en que la perdida sea inaceptable, pero entonces las opciones disponibles seran las mismas con mas urgencia y menos margen de maniobra.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block open">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Alternativa B — Salir del SRSS y subir el precio libremente</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <p class="body-text">LIDERM solicita la exclusion de Micoderm del sistema de reembolso (proceso de 6-12 meses ante comision interministerial). Una vez fuera, fija libremente el precio. Los numeros directos son muy favorables, pero los efectos indirectos son el riesgo clave.</p>
+            <div class="comp-wrapper">
+              <table class="matrix-table">
+                <thead><tr><th>Criterio</th><th>Valoracion</th><th>Comentario</th></tr></thead>
+                <tbody>
+                  <tr><td>Rentabilidad directa Micoderm</td><td><span class="score-high">Excelente (numeros)</span></td><td>Incluso con caida del 65% del volumen, el margen total pasa de -351K a +1,16M EUR. Mejora neta clara.</td></tr>
+                  <tr><td>Valor estrategico</td><td><span class="score-low">Riesgo alto</span></td><td>Los vendedores pierden su mejor "abridor de puertas". Posible entrada de competidor en el SRSS. Presion sobre precios de competidores se relaja.</td></tr>
+                  <tr><td>Riesgo regulatorio</td><td><span class="score-mid">Medio</span></td><td>El proceso es voluntario y controlado. El riesgo no es la exclusion forzosa sino la duracion del proceso (6-12 meses de incertidumbre).</td></tr>
+                  <tr><td>Impacto usuarios vulnerables</td><td><span class="score-low">Significativo</span></td><td>Los 60% de ventas a ancianos (80% con descuento 100%) quedan sin acceso al producto a precio subvencionado. Riesgo reputacional y etico.</td></tr>
+                  <tr><td>Viabilidad</td><td><span class="score-mid">Media</span></td><td>Proceso largo. Durante 6-12 meses LIDERM sigue perdiendo dinero con el precio actual.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-gold mt-16">
+              <strong>El efecto indirecto mas relevante:</strong> si un competidor entra en el SRSS con un producto similar, LIDERM pierde la posicion que hoy tiene gratuitamente. Ese hueco podria ser ocupado por Canesten (ya con 1,4M ud/ano en tratamiento) o por una formulacion de Bebpiel AF reclasificada. La decision de salir del SRSS debe anticipar esta posibilidad.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block open">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Alternativa C — Solicitar subida de precio al Ministerio de Sanidad</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <p class="body-text">LIDERM presenta ante el Ministerio una solicitud justificada de aumento del PVP, basandose en el incremento de costes del 10% desde la ultima solicitud denegada en 2004. El riesgo es que el Ministerio rechace y de paso revise el estatus de Micoderm en el SRSS.</p>
+            <div class="comp-wrapper">
+              <table class="matrix-table">
+                <thead><tr><th>Criterio</th><th>Valoracion</th><th>Comentario</th></tr></thead>
+                <tbody>
+                  <tr><td>Rentabilidad directa Micoderm</td><td><span class="score-mid">Potencialmente buena</span></td><td>Si se consigue, elimina la perdida y posiblemente genera margen positivo. Si se rechaza, todo sigue igual o peor.</td></tr>
+                  <tr><td>Valor estrategico</td><td><span class="score-high">Intacto si se concede</span></td><td>Micoderm permanece en el SRSS con todas sus ventajas estrategicas. Escenario ideal si sale bien.</td></tr>
+                  <tr><td>Riesgo regulatorio</td><td><span class="score-low">Alto y asimetrico</span></td><td>Si el Ministerio rechaza Y revisa el estatus, Micoderm podria ser excluido forzosamente. LIDERM pierde el control del proceso. Contexto 2010 de recortes agrava este riesgo.</td></tr>
+                  <tr><td>Impacto usuarios vulnerables</td><td><span class="score-mid">Limitado</span></td><td>Si se concede la subida, los usuarios siguen con el descuento del SRSS. El incremento de precio no les afecta directamente (paga el Estado).</td></tr>
+                  <tr><td>Viabilidad</td><td><span class="score-low">Incierta</span></td><td>Ya fue denegada en 2004. Contexto 2010 de recortes del gasto publico hace la concesion mas improbable. Resultado no controlado por LIDERM.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-red mt-16">
+              <strong>El riesgo asimetrico de la Alt. C:</strong> si sale bien, es el mejor escenario posible (producto rentable + en SRSS). Pero si sale mal, puede desencadenar la exclusion forzosa del SRSS, que es peor que la exclusion voluntaria (Alt. B) porque LIDERM no controla ni el timing ni las condiciones. En 2010, con el contexto de recortes, la probabilidad de exito es baja y el coste del fracaso es alto.
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-alternativas -->
+
+
+      <!-- ======================================================
+           TAB 4: DECISION
+      ====================================================== -->
+      <div class="tab-pane" id="tab-decision">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num">6</span>
+          Comparativa final de alternativas
+        </h2>
+
+        <div class="comp-wrapper">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>Criterio / Peso</th>
+                <th>A — Mantener</th>
+                <th>B — Salir SRSS</th>
+                <th>C — Pedir subida</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Rentabilidad directa (Alto)</strong></td>
+                <td><span class="score-low">Mala y empeora</span></td>
+                <td><span class="score-high">Excelente</span></td>
+                <td><span class="score-mid">Buena si sale bien</span></td>
+              </tr>
+              <tr>
+                <td><strong>Valor estrategico (Alto)</strong></td>
+                <td><span class="score-high">Intacto</span></td>
+                <td><span class="score-low">En riesgo</span></td>
+                <td><span class="score-high">Intacto si sale bien</span></td>
+              </tr>
+              <tr>
+                <td><strong>Riesgo regulatorio (Alto)</strong></td>
+                <td><span class="score-high">Ninguno</span></td>
+                <td><span class="score-mid">Controlado</span></td>
+                <td><span class="score-low">Alto e incontrolado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Impacto usuarios vulnerables (Medio)</strong></td>
+                <td><span class="score-high">Ninguno</span></td>
+                <td><span class="score-low">Significativo</span></td>
+                <td><span class="score-mid">Limitado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Viabilidad / Control (Medio)</strong></td>
+                <td><span class="score-high">Total</span></td>
+                <td><span class="score-mid">Media (proceso largo)</span></td>
+                <td><span class="score-low">Baja (resultado incierto)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sostenibilidad largo plazo</strong></td>
+                <td><span class="score-low">No sostenible</span></td>
+                <td><span class="score-high">Sostenible</span></td>
+                <td><span class="score-mid">Sostenible si se concede</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="decision-box">
+          <div class="decision-box-label">Recomendacion</div>
+          <div class="decision-box-main">Alternativa B — Iniciar el proceso de salida del SRSS, con preparacion estrategica previa</div>
+          <div class="decision-box-rationale">
+            La logica es la siguiente: la Alternativa A no es una solucion, solo un aplazamiento que empeora con el tiempo. La Alternativa C tiene un riesgo asimetrico inaceptable: si el Ministerio rechaza y revisa el estatus, LIDERM pierde el control del proceso. La Alternativa B es la unica que resuelve el problema de fondo (la perdida) de forma controlada y predecible. Los numeros financieros directos son favorables incluso en el escenario pesimista. Los riesgos estrategicos (fuerza de ventas, entrada de competidores) son reales pero gestionables con preparacion. LIDERM debe iniciar el proceso de salida asegurandose de que: (1) tiene preparado un sustituto de Micoderm como "abridor de puertas" para la fuerza de ventas, (2) ha evaluado si puede solicitar la entrada de Bebpiel AF o ZN en el SRSS antes o simultaneamente a la salida de Micoderm, y (3) gestiona la comunicacion hacia medicos y farmacias para minimizar el dano reputacional.
+          </div>
+        </div>
+
+        <div class="callout callout-gold mt-24">
+          <strong>La condicion previa critica:</strong> antes de solicitar la salida del SRSS, LIDERM debe resolver que producto ocupara el rol de "abridor de cuentas" que Micoderm tiene hoy. Si no existe ese sustituto, la Alternativa B tiene un coste estrategico oculto que puede invalidar los beneficios financieros directos. La decision sobre Micoderm no puede tomarse de forma aislada: es una decision sobre el portfolio completo de LIDERM.
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left">
+              <span class="reveal-icon" style="color:var(--gold);">&#9881;</span>
+              <span class="reveal-title">Notas para tutoria — Decision</span>
+            </div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <p class="body-text"><strong>Cierre del debate:</strong> la decision recomendada es la B, pero el COMO importa tanto como el QUE. Los participantes que llegan a la B de forma automatica (porque "los numeros lo dicen") suelen no haber pensado en los efectos indirectos. Los que se quedan en la A son los que ven solo el valor estrategico sin cuantificar la tendencia de la perdida. El metodo obliga a considerar ambas dimensiones.</p>
+            <p class="body-text"><strong>Sobre la Alt. C:</strong> algunos participantes la defienden con el argumento de que "hay que intentarlo". El punto a trabajar es la asimetria del riesgo: en 2004 ya fue denegada. En 2010, con recortes del gasto publico, la probabilidad de exito es menor y el riesgo de que el Ministerio aproveche para revisar el estatus es mayor. La regla de decision no debe ser "si existe la posibilidad, intentarlo", sino "si el valor esperado de intentarlo es positivo dado el riesgo".</p>
+            <p class="body-text"><strong>Pregunta de cierre util:</strong> "Si sois el nuevo director de marketing que entra el lunes, que anunciacion a Jorge en la primera reunion?" Fuerza la concrecion: no solo la decision, sino el plan de implementacion.</p>
+          </div>
+        </div>
+
+      </div><!-- /tab-decision -->
+
+
+      <!-- ======================================================
+           TAB 5: DATOS DEL CASO
+      ====================================================== -->
+      <div class="tab-pane" id="tab-datos">
+
+        <h2 class="section-title mt-0">
+          <span class="step-num" style="background:var(--gold-pale);color:var(--navy);">&#8801;</span>
+          Datos de referencia del caso
+        </h2>
+
+        <div class="reveal-block open">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Micoderm y competidores (Anexo 1)</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <div class="comp-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Uso</th><th>Categoria</th><th>Producto</th><th>Tamano</th><th class="num">PVP (EUR)</th><th class="num">Uds (miles)</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Prevencion</td><td>Cosmético</td><td>Avene Pediatril</td><td>50 ml</td><td class="num">4,45</td><td class="num">15</td></tr>
+                  <tr><td>Prevencion</td><td>Cosmético</td><td>Gluteo Seco</td><td>50 g</td><td class="num">6,83</td><td class="num">53</td></tr>
+                  <tr><td>Prevencion</td><td>Cosmético</td><td>Bebpiel ZN</td><td>50 ml</td><td class="num">5,89</td><td class="num">35</td></tr>
+                  <tr><td>Prevencion</td><td>Cosmético</td><td>Balsamo Bebe</td><td>50 g</td><td class="num">4,83</td><td class="num">95</td></tr>
+                  <tr><td>Prevencion</td><td>EFP</td><td>Halibut Pomada</td><td>45 g</td><td class="num">3,58</td><td class="num">350</td></tr>
+                  <tr><td>Prevencion</td><td>EFP</td><td>Pasta Lassar</td><td>50 g</td><td class="num">4,83</td><td class="num">99</td></tr>
+                  <tr><td>Prevencion</td><td>Cosmético</td><td>Anticongestivo Cusi</td><td>45 g</td><td class="num">4,51</td><td class="num">262</td></tr>
+                  <tr><td>Tratamiento</td><td>Medicamento</td><td>Fucibet Crema</td><td>30 g</td><td class="num">13,91</td><td class="num">195</td></tr>
+                  <tr><td>Tratamiento</td><td>Cosmético</td><td>Bebpiel AF</td><td>50 ml</td><td class="num">8,96</td><td class="num">130</td></tr>
+                  <tr><td>Tratamiento</td><td>Medicamento</td><td>Canesten</td><td>30 g</td><td class="num">5,95</td><td class="num">1.394</td></tr>
+                  <tr><td>Tratamiento</td><td>Medicamento</td><td>Peitel</td><td>30 g</td><td class="num">5,60</td><td class="num">439</td></tr>
+                  <tr><td>Tratamiento</td><td>Medicamento</td><td>Mycostatin Pomada</td><td>30 g</td><td class="num">2,36</td><td class="num">169</td></tr>
+                  <tr class="total-row"><td><strong>Prev. + Trat.</strong></td><td><strong>Medicamento</strong></td><td><strong>Micoderm</strong></td><td>50 g</td><td class="num"><strong>2,37</strong></td><td class="num"><strong>2.196</strong></td></tr>
+                  <tr class="total-row"><td colspan="5"><strong>TOTAL mercado (productos listados)</strong></td><td class="num"><strong>5.834</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-small mt-8">Nota: PVL de medicamentos = 64% del PVP. Unidades en miles.</p>
+            <div class="callout callout-navy mt-16">
+              <strong>Lectura estrategica:</strong> Micoderm tiene 2.196.000 ud = 37,6% del volumen total del mercado listado. Es el lider indiscutible en volumen, pero con el precio mas bajo de todos los medicamentos (exceptuando Mycostatin a 2,36 EUR). Canesten, con 1.394.000 ud a 5,95 EUR, es el mayor competidor en tratamiento y tiene un precio 2,5 veces mayor.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Familia Bebpiel de LIDERM (Anexo 2)</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <div class="comp-wrapper">
+              <table class="data-table">
+                <thead><tr><th>Producto</th><th>Indicacion</th><th>Textura</th><th>Presentacion</th><th>Registro</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Bebpiel AF</strong></td>
+                    <td>Dermatitis del pañal sobreinfectada</td>
+                    <td>Pomada</td><td>Tubo 50 ml</td><td>Cosmético</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bebpiel ZN</strong></td>
+                    <td>Dermatitis del pañal irritativa / prevencion</td>
+                    <td>Pomada</td><td>Tubo 50 ml</td><td>Cosmético</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Micoderm</strong></td>
+                    <td>Prevencion y tratamiento de la dermatitis del pañal recurrente</td>
+                    <td>Pomada</td><td>Tubo 50 g</td><td><strong>Medicamento</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-gold mt-16">
+              <strong>Posicion paradojica de Bebpiel AF:</strong> es MAS eficaz que Micoderm tanto en tratamiento como en prevencion, pero al ser cosmético no esta en el SRSS y vende solo 130.000 ud a 8,96 EUR. Si Micoderm saliera del SRSS, Bebpiel AF podria ganar traccion entre el segmento menos sensible al precio (padres con bebes). Esto matiza parcialmente el riesgo estrategico de la salida.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Estimacion del impacto de salir del SRSS (Anexo 3)</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <p class="body-text">El grafico del Anexo 3 muestra la caida estimada de volumen en funcion del nuevo PVP, en tres escenarios (optimista, normal, pesimista). Los valores leidos del grafico a distintos precios son:</p>
+            <div class="comp-wrapper">
+              <table class="data-table">
+                <thead><tr><th>PVP nuevo</th><th>Caida opt.</th><th>Caida normal</th><th>Caida pes.</th><th>PVL equivalente</th><th>Margen/ud (si coste = 1,69)</th></tr></thead>
+                <tbody>
+                  <tr><td>3,00 EUR</td><td>-20%</td><td>-40%</td><td>-60%</td><td>1,92</td><td>+0,23</td></tr>
+                  <tr><td>4,00 EUR</td><td>-25%</td><td>-45%</td><td>-63%</td><td>2,56</td><td>+0,87</td></tr>
+                  <tr class="total-row"><td><strong>5,00 EUR</strong></td><td>-30%</td><td>-50%</td><td>-65%</td><td>3,20</td><td><strong>+1,51</strong></td></tr>
+                  <tr><td>6,00 EUR</td><td>-35%</td><td>-57%</td><td>-72%</td><td>3,84</td><td>+2,15</td></tr>
+                  <tr><td>8,00 EUR</td><td>-55%</td><td>-72%</td><td>-90%</td><td>5,12</td><td>+3,43</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-small mt-8">PVL = PVP x 0,64. Caida de volumen leida aproximadamente del grafico del caso.</p>
+            <div class="callout callout-navy mt-8">
+              <strong>Punto de indiferencia financiera:</strong> con el coste actual de 1,69 EUR/ud, el punto de equilibrio de la decision de salir del SRSS se alcanza cuando el margen positivo por unidad compensa el margen negativo actual. Ese punto se alcanza a un PVP de solo 2,65 EUR (PVL 1,69 EUR). Cualquier precio mayor que ese hace financieramente mejor la salida del SRSS que quedarse, independientemente del volumen.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Investigacion de mercado: conclusiones clave (Anexo 4)</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <div class="comp-wrapper">
+              <table class="data-table">
+                <thead><tr><th>Colectivo</th><th>Hallazgo clave</th><th>Implicacion para la decision</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Usuarios — ancianos</strong></td>
+                    <td>60% de las ventas. 80% con descuento 100%. Alta sensibilidad al precio.</td>
+                    <td>Una salida del SRSS afecta principalmente a este segmento. Riesgo reputacional y etico alto.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Usuarios — bebes</strong></td>
+                    <td>30% de ventas. Menos sensibles al precio. Boca-oreja esencial.</td>
+                    <td>Este segmento puede sobrevivir una subida de precio si el producto sigue siendo accesible y conocido.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Farmacias</strong></td>
+                    <td>2/3 de los clientes sin receta piden productos que les han resultado satisfactorios. Farmaceuticos prefieren productos de mayor margen.</td>
+                    <td>Si Micoderm sube de precio y da mas margen al farmaceutico, la recomendacion farmaceutica puede aumentar. Efecto compensador parcial.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Medicos publicos</strong></td>
+                    <td>Tienen en cuenta si el producto esta en el SRSS antes de prescribir. Medicos jovenes conocen menos Micoderm.</td>
+                    <td>Si sale del SRSS, los medicos publicos dejaran de prescribirlo masivamente. Afecta al segmento de ancianos.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Medicos privados</strong></td>
+                    <td>No consideran el SRSS al prescribir. Prefieren productos sofisticados. Los pacientes a veces van luego al publico a conseguir el descuento.</td>
+                    <td>Fuera del SRSS, los medicos privados podrian prescribir Bebpiel AF (mas eficaz, mas sofisticado) en lugar de Micoderm.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-block">
+          <div class="reveal-header">
+            <div class="reveal-header-left"><span class="reveal-title">Glosario del caso</span></div>
+            <span class="reveal-icon">&#9660;</span>
+          </div>
+          <div class="reveal-body">
+            <div class="comp-wrapper">
+              <table class="data-table">
+                <thead><tr><th>Termino</th><th>Definicion</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>SRSS</strong></td><td>Sistema de Reembolso de la Seguridad Social. Subvenciona medicamentos prescritos en el sistema publico (60% trabajadores activos, 100% pensionistas).</td></tr>
+                  <tr><td><strong>PVP</strong></td><td>Precio de Venta al Publico. Lo que paga el consumidor en la farmacia.</td></tr>
+                  <tr><td><strong>PVL</strong></td><td>Precio de Venta de Laboratorio. Lo que cobra LIDERM a la farmacia. Para medicamentos = 64% del PVP.</td></tr>
+                  <tr><td><strong>Medicamento</strong></td><td>Producto con principio activo para tratamiento o prevencion de patologias. Necesita prescripcion para la mayoria; no puede publicitarse. Subsidiable por el SRSS.</td></tr>
+                  <tr><td><strong>EFP</strong></td><td>Especialidad Farmaceutica Publicitaria. Principio activo para sintomas menores. Se puede publicitar y comprar sin receta. No genera descuento del SRSS.</td></tr>
+                  <tr><td><strong>Cosmético</strong></td><td>Producto sin principio activo terapeutico. Alivia molestias esteticas o fisicas. Sin receta, sin reembolso, se puede publicitar.</td></tr>
+                  <tr><td><strong>Dermatitis de pañal</strong></td><td>Irritacion de la piel en zonas cubiertas por pañal. Afecta a bebes (practica mente 100%) y ancianos incontinentes. Tratamiento: corticoides topicos + higiene.</td></tr>
+                  <tr><td><strong>Visitador medico</strong></td><td>Comercial de laboratorio que visita medicos para informar sobre productos y generar prescripciones.</td></tr>
+                  <tr><td><strong>Producto pull</strong></td><td>Producto que el consumidor pide activamente (vs. producto push que el farmaceutico sugiere). Habitual en cosmeticos de marca.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-datos -->
+
+    </div><!-- /tabs-wrapper -->
+  </div><!-- /page-content -->
+</main>
+
+<script src="nav.js"></script>
+</body>
+</html>

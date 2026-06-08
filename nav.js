@@ -14,6 +14,7 @@
     { slug: 'caso-ricks-cafe',           title: "Rick\u2019s Cafe Americain",          ready: true  },
     { slug: 'caso-alimentacion-gorki',   title: 'Alimentación Gorki',             ready: true },
     { slug: 'caso-programacion-avanzada',title: 'Servicios de Programaci\u00f3n',      ready: true  },
+    { slug: 'caso-micoderm',             title: 'Micoderm',                          ready: true  },
   ];
 
   /* ── Construir el sidebar ──────────────────────────────── */
